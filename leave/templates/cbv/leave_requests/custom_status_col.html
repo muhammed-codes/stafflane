@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load static %}
 {% load basefilters %}
-{% load horillafilters %}
+{% load stafflanefilters %}
 
 {% if instance.multiple_approvals and instance.status == 'requested' %}
 <div class="oh-checkpoint-badge oh-checkpoint-badge--secondary" title="{% for manager in instance.multiple_approvals.managers %}{{ manager }}{% if not forloop.last %} , {% endif %}{% endfor %}" style="width:120px;height:30px;">

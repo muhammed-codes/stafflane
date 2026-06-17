@@ -11,11 +11,11 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 from recruitment.filters import SkillsFilter
 from recruitment.forms import SkillsForm
@@ -26,7 +26,7 @@ from recruitment.models import Skill
 @method_decorator(
     permission_required(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class SkillsListView(HorillaListView):
+class SkillsListView(StafflaneListView):
     """
     list view of the skills in settings
     """
@@ -74,7 +74,7 @@ class SkillsListView(HorillaListView):
 @method_decorator(
     permission_required(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class SkillsNavView(HorillaNavView):
+class SkillsNavView(StafflaneNavView):
     """
     navbar of skills view
     """
@@ -99,7 +99,7 @@ class SkillsNavView(HorillaNavView):
 @method_decorator(
     permission_required(perm="recruitment.add_recruitment"), name="dispatch"
 )
-class SkillsCreateForm(HorillaFormView):
+class SkillsCreateForm(StafflaneFormView):
     """
     form view for creating and update skills in settings
     """

@@ -34,7 +34,7 @@ def _filter_recruitment_by_obj_id(qs, name, value):
 
 
 from base.filters import FilterSet
-from horilla.filters import HorillaFilterSet, filter_by_name
+from stafflane.filters import StafflaneFilterSet, filter_by_name
 from recruitment.models import (
     Candidate,
     InterviewSchedule,
@@ -53,7 +53,7 @@ from recruitment.models import (
 # from django.forms.widgets import Boo
 
 
-class CandidateFilter(HorillaFilterSet):
+class CandidateFilter(StafflaneFilterSet):
     """
     Filter set class for Candidate model
 
@@ -346,7 +346,7 @@ BOOLEAN_CHOICES = (
 )
 
 
-class RecruitmentFilter(HorillaFilterSet):
+class RecruitmentFilter(StafflaneFilterSet):
     """
     Filter set class for Recruitment model
 
@@ -492,7 +492,7 @@ class RejectReasonFilter(FilterSet):
         ]
 
 
-class StageFilter(HorillaFilterSet):
+class StageFilter(StafflaneFilterSet):
     """
     Filter set class for Stage model
 
@@ -565,7 +565,7 @@ class StageFilter(HorillaFilterSet):
         return queryset.distinct()
 
 
-class SurveyFilter(HorillaFilterSet):
+class SurveyFilter(StafflaneFilterSet):
     """
     SurveyFIlter
     """
@@ -652,7 +652,7 @@ class SkillZoneFilter(FilterSet):
         ]
 
 
-class SkillZoneCandFilter(HorillaFilterSet):
+class SkillZoneCandFilter(StafflaneFilterSet):
     """
     Skillzone Candidate FIlter
     """
@@ -770,7 +770,7 @@ class SkillZoneCandFilter(HorillaFilterSet):
         ).distinct()
 
 
-class InterviewFilter(HorillaFilterSet):
+class InterviewFilter(StafflaneFilterSet):
     """
     Filter set class for Candidate model
 

@@ -121,8 +121,8 @@ def config_perms(user):
             "base.change_holiday",
             "base.add_companyleaves",
             "base.change_companyleaves",
-            "base.add_horillamailtemplates",
-            "base.view_horillamailtemplates",
+            "base.add_stafflanemailtemplates",
+            "base.view_stafflanemailtemplates",
         ],
     }
 
@@ -168,7 +168,7 @@ def general_section_main(context):
         [
             user.has_perm("base.change_announcementexpire"),
             user.has_perm("base.view_dynamicpagination"),
-            user.has_perm("horilla_audit.view_accountblockunblock"),
+            user.has_perm("stafflane_audit.view_accountblockunblock"),
             user.has_perm("offboarding.change_offboardinggeneralsetting"),
             user.has_perm("attendance.change_attendancegeneralsetting"),
             user.has_perm("payroll.change_payrollgeneralsetting"),
@@ -181,9 +181,9 @@ def general_section_main(context):
             user.has_perm("base.view_company"),
             user.has_perm("base.view_tags"),
             user.has_perm("employee.view_employeetag"),
-            user.has_perm("horilla_audit.view_audittag"),
+            user.has_perm("stafflane_audit.view_audittag"),
             user.has_perm("base.view_dynamicemailconfiguration"),
-            user.has_perm("horilla_backup.view_googledrivebackup"),
+            user.has_perm("stafflane_backup.view_googledrivebackup"),
         ]
     )
 
@@ -199,7 +199,7 @@ def general_section(context):
         [
             user.has_perm("base.change_announcementexpire"),
             user.has_perm("base.view_dynamicpagination"),
-            user.has_perm("horilla_audit.view_accountblockunblock"),
+            user.has_perm("stafflane_audit.view_accountblockunblock"),
             user.has_perm("offboarding.change_offboardinggeneralsetting"),
             user.has_perm("attendance.change_attendancegeneralsetting"),
             user.has_perm("payroll.change_payrollgeneralsetting"),
@@ -274,7 +274,7 @@ def show_section(context):
             user.has_perm("recruitment.view_rejectreason"),
             user.has_perm("recruitment.add_recruitment"),
             user.has_perm("recruitment.add_linkedinaccount"),
-            user.has_perm("horilla_audit.view_accountblockunblock"),
+            user.has_perm("stafflane_audit.view_accountblockunblock"),
             user.has_perm("offboarding.change_offboardinggeneralsetting"),
             user.has_perm("attendance.change_attendancegeneralsetting"),
             user.has_perm("payroll.change_payrollgeneralsetting"),
@@ -283,10 +283,10 @@ def show_section(context):
             user.has_perm("payroll.view_payrollsettings"),
             user.has_perm("auth.view_permission"),
             user.has_perm("auth.view_group"),
-            user.has_perm("horilla_audit.view_audittag"),
-            user.has_perm("horilla_backup.view_googledrivebackup"),
-            user.has_perm("horilla_ldap.add_ldapsettings"),
-            user.has_perm("horilla_ldap.update_ldapsettings"),
+            user.has_perm("stafflane_audit.view_audittag"),
+            user.has_perm("stafflane_backup.view_googledrivebackup"),
+            user.has_perm("stafflane_ldap.add_ldapsettings"),
+            user.has_perm("stafflane_ldap.update_ldapsettings"),
             user.has_perm("employee.view_actiontype"),
             user.has_perm("helpdesk.view_tag"),
             user.has_perm("whatsapp.view_whatsappcredentials"),
@@ -304,12 +304,12 @@ def show_section(context):
             user.has_perm("base.view_employeetype"),
             user.has_perm("base.change_announcementexpire"),
             user.has_perm("base.view_dynamicpagination"),
-            user.has_perm("horilla_backup.view_googledrivebackup"),
+            user.has_perm("stafflane_backup.view_googledrivebackup"),
             user.has_perm("recruitment.view_linkedinaccount"),
-            user.has_perm("horilla_ldap.add_ldapsettings"),
-            user.has_perm("horilla_ldap.update_ldapsettings"),
-            user.has_perm("horilla_meet.view_googlecloudcredential"),
+            user.has_perm("stafflane_ldap.add_ldapsettings"),
+            user.has_perm("stafflane_ldap.update_ldapsettings"),
+            user.has_perm("stafflane_meet.view_googlecloudcredential"),
             user.has_perm("whatsapp.add_whatsappcredentials"),
-            user.has_perm("horilla_theme.view_horillacolortheme"),
+            user.has_perm("stafflane_theme.view_stafflanecolortheme"),
         ]
     )

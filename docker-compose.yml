@@ -12,9 +12,9 @@ services:
       - SECRET_KEY=dev-secret-key-change-in-production
       - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
       - CSRF_TRUSTED_ORIGINS=http://localhost:8000
-      - DATABASE_URL=postgres://horilla_user:horilla_pass@db:5432/horilla_db
+      - DATABASE_URL=postgres://stafflane_user:stafflane_pass@db:5432/stafflane_db
       - DB_INIT_PASSWORD=dev-init-password-change-in-production
-      - REDIS_URL=redis://:horilla_pass@redis:6379/0
+      - REDIS_URL=redis://:stafflane_pass@redis:6379/0
     depends_on:
       db:
         condition: service_healthy
@@ -30,24 +30,24 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: horilla_db
-      POSTGRES_USER: horilla_user
-      POSTGRES_PASSWORD: horilla_pass
+      POSTGRES_DB: stafflane_db
+      POSTGRES_USER: stafflane_user
+      POSTGRES_PASSWORD: stafflane_pass
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U horilla_user -d horilla_db"]
+      test: ["CMD-SHELL", "pg_isready -U stafflane_user -d stafflane_db"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    command: redis-server --appendonly yes --requirepass horilla_pass
+    command: redis-server --appendonly yes --requirepass stafflane_pass
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "horilla_pass", "ping"]
+      test: ["CMD", "redis-cli", "-a", "stafflane_pass", "ping"]
       interval: 5s
       timeout: 5s
       retries: 5

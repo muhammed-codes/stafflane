@@ -1,4 +1,4 @@
-{% extends 'index.html' %} {% block content %} {% load static %} {% load i18n %} {% load horillafilters %} {% load basefilters %}
+{% extends 'index.html' %} {% block content %} {% load static %} {% load i18n %} {% load stafflanefilters %} {% load basefilters %}
 {% general_section as general_section %}
 {% employee_section as employee_section %}
 {% attendance_section as attendance_section %}
@@ -151,7 +151,7 @@
 												{% endif %}
 											</div>
 											<div class="oh-input-group">
-												{% if perms.base.view_tags or perms.employee.view_employeetag or perms.horilla_audit.view_audittag %}
+												{% if perms.base.view_tags or perms.employee.view_employeetag or perms.stafflane_audit.view_audittag %}
 													<a
 														id="ticket_type"
 														href="{% url 'tag-view' %}"
@@ -161,7 +161,7 @@
 												{% endif %}
 											</div>
 											<div class="oh-input-group">
-												{% if perms.horilla_audit.view_auditmodelconfig %}
+												{% if perms.stafflane_audit.view_auditmodelconfig %}
 													<a
 														id="auditTracking"
 														href="{% url 'audit-model-settings' %}"
@@ -190,7 +190,7 @@
 											</div>
 											{% endif %}
 											<div class="oh-input-group">
-												{% if perms.horilla_backup.view_googledrivebackup %}
+												{% if perms.stafflane_backup.view_googledrivebackup %}
 													<a
 														id="date"
 														href="{% url 'gdrive' %}"
@@ -199,8 +199,8 @@
 													>
 												{% endif %}
 											</div>
-											{% if "horilla_ldap"|app_installed %}
-												{% if perms.horilla_ldap.add_ldapsettings or perms.horilla_ldap.update_ldapsettings %}
+											{% if "stafflane_ldap"|app_installed %}
+												{% if perms.stafflane_ldap.add_ldapsettings or perms.stafflane_ldap.update_ldapsettings %}
 													<div class="oh-input-group">
 														<a
 															id="date"

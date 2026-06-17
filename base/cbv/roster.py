@@ -20,8 +20,8 @@ from django.views.generic import TemplateView
 from base.filters import RosterFilter
 from base.forms import RosterCellUpdateForm
 from base.models import Roster, RosterPublishLog
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import HorillaCardView, HorillaNavView
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import StafflaneCardView, StafflaneNavView
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -56,7 +56,7 @@ class RosterHomeView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class RosterNavView(HorillaNavView):
+class RosterNavView(StafflaneNavView):
     nav_title = _("Roster Planner")
     search_url = reverse_lazy("roster-grid")
     search_swap_target = "#rosterGridContainer"
@@ -107,7 +107,7 @@ class RosterNavView(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class RosterGridView(HorillaCardView):
+class RosterGridView(StafflaneCardView):
     model = Roster
     filter_class = RosterFilter
     template_name = "base/roster/roster_grid.html"
@@ -649,7 +649,7 @@ class RosterTemplateDownloadView(View):
                     c.fill = off_fill
                     c.font = off_font
                     if off_reason != "Company Leave":
-                        c.comment = Comment(f"Holiday: {off_reason}", "Horilla")
+                        c.comment = Comment(f"Holiday: {off_reason}", "Stafflane")
                 elif d.weekday() >= 5:
                     c.fill = weekend_fill
 

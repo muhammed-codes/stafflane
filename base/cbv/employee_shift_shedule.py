@@ -13,13 +13,13 @@ from django.utils.translation import gettext_lazy as _
 from base.filters import EmployeeShiftFilter, EmployeeShiftScheduleFilter
 from base.forms import EmployeeShiftScheduleForm
 from base.models import EmployeeShiftSchedule
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 
 
@@ -27,7 +27,7 @@ from horilla_views.generic.cbv.views import (
 @method_decorator(
     permission_required(perm="base.view_employeeshiftschedule"), name="dispatch"
 )
-class EmployeeShiftSheduleNav(HorillaNavView):
+class EmployeeShiftSheduleNav(StafflaneNavView):
     """
     nav bar of the employee shift sheduel view
     """
@@ -53,7 +53,7 @@ class EmployeeShiftSheduleNav(HorillaNavView):
 @method_decorator(
     permission_required(perm="base.add_employeeshiftschedule"), name="dispatch"
 )
-class EmployeeShiftSheduleCreateForm(HorillaFormView):
+class EmployeeShiftSheduleCreateForm(StafflaneFormView):
     """
     form view for creating  and updating job position in settings
     """
@@ -86,7 +86,7 @@ class EmployeeShiftSheduleCreateForm(HorillaFormView):
                     self.request,
                     _("Employee Shift Schedule has been created successfully!"),
                 )
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
         return super().form_valid(form)
 
 
@@ -94,7 +94,7 @@ class EmployeeShiftSheduleCreateForm(HorillaFormView):
 @method_decorator(
     permission_required(perm="base.view_employeeshiftschedule"), name="dispatch"
 )
-class EmployeeShiftSheduleList(HorillaListView):
+class EmployeeShiftSheduleList(StafflaneListView):
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
@@ -133,7 +133,7 @@ class EmployeeShiftSheduleList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class EmployeeShiftSheduleDetailView(HorillaDetailedView):
+class EmployeeShiftSheduleDetailView(StafflaneDetailedView):
     """
     detail view of the page
     """
@@ -153,7 +153,7 @@ class EmployeeShiftSheduleDetailView(HorillaDetailedView):
     def dispatch(self, request, *args, **kwargs):
         if not EmployeeShiftSchedule.objects.filter(id=kwargs.get("pk")).exists():
             messages.error(request, _("Shift schedule not found."))
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

@@ -32,9 +32,9 @@ from employee.models import (
     Policy,
     PolicyMultipleFile,
 )
-from horilla.decorators import hx_request_required, login_required, permission_required
-from horilla.http.response import HorillaRedirect
-from horilla_auth.models import HorillaUser
+from stafflane.decorators import hx_request_required, login_required, permission_required
+from stafflane.http.response import StafflaneRedirect
+from stafflane_auth.models import StafflaneUser
 from notifications.signals import notify
 
 
@@ -149,7 +149,7 @@ def add_attachment(request):
     """
     policy = Policy.find(request.GET.get("policy_id"))
     if not policy:
-        return HorillaRedirect(
+        return StafflaneRedirect(
             request, message=_("No Policy found matching the query.")
         )
 
@@ -173,7 +173,7 @@ def remove_attachment(request):
     """
     policy = Policy.find(request.GET.get("policy_id"))
     if not policy:
-        return HorillaRedirect(
+        return StafflaneRedirect(
             request, message=_("No Policy found matching the query.")
         )
 
@@ -189,7 +189,7 @@ def get_attachments(request):
     """
     policy = Policy.find(request.GET.get("policy_id"))
     if not policy:
-        return HorillaRedirect(
+        return StafflaneRedirect(
             request, message=_("No Policy found matching the query.")
         )
 
@@ -300,7 +300,7 @@ def create_actions(request):
             )
         dis = DisciplinaryAction.objects.all()
         if len(dis) == 1:
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
 
     return render(
         request, "disciplinary_actions/form.html", {"form": form, "dynamic": dynamic}
@@ -356,7 +356,7 @@ def remove_employee_disciplinary_action(request, action_id, emp_id):
 
     if action_type == "dismissal" or action_type == "suspension":
         emp = get_object_or_404(Employee, id=emp_id)
-        user = get_object_or_404(HorillaUser, id=emp.employee_user_id.id)
+        user = get_object_or_404(StafflaneUser, id=emp.employee_user_id.id)
         if user.is_active:
             pass
         else:
@@ -398,7 +398,7 @@ def delete_actions(request, action_id):
 
         if action_type == "dismissal" or action_type == "suspension":
             employee = get_object_or_404(Employee, id=dis_emp.id)
-            user = get_object_or_404(HorillaUser, id=employee.employee_user_id.id)
+            user = get_object_or_404(StafflaneUser, id=employee.employee_user_id.id)
             if user.is_active:
                 pass
             else:
@@ -427,7 +427,7 @@ def delete_actions(request, action_id):
 
     if dis_actions.exists():
         return redirect(reverse("disciplinary-actions-list"))
-    return HorillaRedirect(request)
+    return StafflaneRedirect(request)
 
 
 @login_required

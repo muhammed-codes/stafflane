@@ -16,15 +16,15 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from base.methods import get_subordinates
-from horilla.http import HorillaRedirect
-from horilla.methods import handle_no_permission
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaCardView,
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane.http import StafflaneRedirect
+from stafflane.methods import handle_no_permission
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneCardView,
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from project.cbv.project_stage import StageDynamicCreateForm
@@ -47,7 +47,7 @@ class TasksTemplateView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class TaskListView(HorillaListView):
+class TaskListView(StafflaneListView):
     """
     list view of the page
     """
@@ -170,7 +170,7 @@ class TaskListView(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class TasksNavBar(HorillaNavView):
+class TasksNavBar(StafflaneNavView):
     """
     navbar of teh page
     """
@@ -255,7 +255,7 @@ class TasksNavBar(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class TaskCreateForm(HorillaFormView):
+class TaskCreateForm(StafflaneFormView):
     """
     Form view for create and update tasks
     """
@@ -279,24 +279,24 @@ class TaskCreateForm(HorillaFormView):
         task_id = self.kwargs.get("pk")
         if not task_id and not Project.objects.exists():
             messages.error(request, _("Please create a project first."))
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
 
         if project_id:
             project = Project.objects.filter(id=project_id).first()
             if not project:
                 messages.error(request, _("Project not found."))
-                return HorillaRedirect(request)
+                return StafflaneRedirect(request)
         elif stage_id:
             stage = ProjectStage.objects.filter(id=stage_id).first()
             if not stage:
                 messages.error(request, _("Stage not found."))
-                return HorillaRedirect(request)
+                return StafflaneRedirect(request)
             project = stage.project
         elif task_id:
             task = Task.objects.filter(id=task_id).first()
             if not task:
                 messages.error(request, _("Task not found."))
-                return HorillaRedirect(request)
+                return StafflaneRedirect(request)
             project = task.project
         elif not task_id:
             return super().get(request, *args, pk=pk, **kwargs)
@@ -396,7 +396,7 @@ class TaskCreateForm(HorillaFormView):
             form.save()
             messages.success(self.request, _(message))
             if stage_id or self.request.GET.get("project_task"):
-                return HorillaRedirect(self.request)
+                return StafflaneRedirect(self.request)
             return self.HttpResponse("<script>$('#applyFilter').click();</script>")
         return super().form_valid(form)
 
@@ -420,7 +420,7 @@ class DynamicTaskCreateFormView(TaskCreateForm):
 
 
 @method_decorator(login_required, name="dispatch")
-class TaskDetailView(HorillaDetailedView):
+class TaskDetailView(StafflaneDetailedView):
     """
     detail view of the task page
     """
@@ -452,7 +452,7 @@ class TaskDetailView(HorillaDetailedView):
 
 
 @method_decorator(login_required, name="dispatch")
-class TaskCardView(HorillaCardView):
+class TaskCardView(StafflaneCardView):
     """
     card view of the page
     """

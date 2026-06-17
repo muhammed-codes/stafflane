@@ -14,17 +14,17 @@ from base.decorators import manager_can_enter
 from base.filters import RotatingShiftFilter
 from base.forms import RotatingShiftForm
 from base.models import RotatingShift
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_rotatingshift"), name="dispatch")
-class RotatingShiftTypeListView(HorillaListView):
+class RotatingShiftTypeListView(StafflaneListView):
     """
     List view of the employee shift page
     """
@@ -93,7 +93,7 @@ class RotatingShiftTypeListView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_rotatingshift"), name="dispatch")
-class RotatingShiftTypeNav(HorillaNavView):
+class RotatingShiftTypeNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -116,7 +116,7 @@ class RotatingShiftTypeNav(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("base.add_rotatingshift"), name="dispatch")
-class DynamicRotatingShiftTypeFormView(HorillaFormView):
+class DynamicRotatingShiftTypeFormView(StafflaneFormView):
     """
     form view
     """

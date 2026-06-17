@@ -49,7 +49,7 @@ from base.models import (
     EmployeeShiftSchedule,
     EmployeeType,
     Holidays,
-    HorillaMailTemplate,
+    StafflaneMailTemplate,
     JobPosition,
     JobRole,
     RotatingShift,
@@ -61,8 +61,8 @@ from base.models import (
     WorkType,
     WorkTypeRequest,
 )
-from horilla_audit.cbv import audit
-from horilla_audit.models import AuditTag
+from stafflane_audit.cbv import audit
+from stafflane_audit.models import AuditTag
 
 urlpatterns = [
     path("", views.home, name="home-page"),
@@ -314,7 +314,7 @@ urlpatterns = [
     path("login/", views.login_user, name="login"),
     path(
         "forgot-password/",
-        views.HorillaPasswordResetView.as_view(),
+        views.StafflanePasswordResetView.as_view(),
         name="forgot-password",
     ),
     path(
@@ -444,7 +444,7 @@ urlpatterns = [
         views.object_duplicate,
         name="duplicate-mail-template",
         kwargs={
-            "model": HorillaMailTemplate,
+            "model": StafflaneMailTemplate,
             "form": MailTemplateForm,
             "template": "mail/htmx/form.html",
         },
@@ -1700,9 +1700,9 @@ urlpatterns = [
         name="detail-view-multiple-approval-condition",
     ),
     path(
-        "get-horilla-installed-apps/",
-        views.get_horilla_installed_apps,
-        name="get-horilla-installed-apps",
+        "get-stafflane-installed-apps/",
+        views.get_stafflane_installed_apps,
+        name="get-stafflane-installed-apps",
     ),
     # path("configuration/holiday-view", views.holiday_view, name="holiday-view"),
     path(

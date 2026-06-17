@@ -15,7 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from base.forms import ModelForm
 from employee.forms import MultipleFileField
 from employee.models import Employee
-from horilla import horilla_middlewares
+from stafflane import stafflane_middlewares
 from notifications.signals import notify
 from offboarding.models import (
     EmployeeTask,
@@ -278,7 +278,7 @@ class ResignationLetterForm(ModelForm):
                 self.instance.employee_id.get_full_name() + "'s Resignation Letter"
             )
 
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         if request and not request.user.has_perm("offboarding.add_offboardingemployee"):
             exclude = exclude + [
                 "employee_id",
@@ -296,7 +296,7 @@ class ResignationLetterForm(ModelForm):
             del self.fields[field]
 
     def save(self, commit: bool = ...) -> Any:
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         instance = self.instance
         if (
             not request.user.has_perm("offboarding.add_offboardingemployee")

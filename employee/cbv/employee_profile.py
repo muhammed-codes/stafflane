@@ -18,16 +18,16 @@ from base.forms import AddToUserGroupForm
 from employee import views
 from employee.filters import EmployeeFilter
 from employee.models import Employee
-from horilla import settings
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import HorillaProfileView
+from stafflane import settings
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import StafflaneProfileView
 
 Employee.cbv_employee_profile_edi_url = reverse_lazy("edit-profile")
 
 
 @method_decorator(login_required, name="dispatch")
-class EmployeeProfileView(HorillaProfileView):
+class EmployeeProfileView(StafflaneProfileView):
     """
     EmployeeProfileView
     """
@@ -49,7 +49,7 @@ class EmployeeProfileView(HorillaProfileView):
 
         obj_id = kwargs.get("pk")
         if not Employee.objects.entire().filter(id=obj_id).exists():
-            return HorillaRedirect(
+            return StafflaneRedirect(
                 request, message=_("No employee found matching the query.")
             )
 
@@ -172,7 +172,7 @@ class GroupAssignView(View):
         try:
             employee = Employee.objects.get(id=employee_id)
         except Employee.DoesNotExist:
-            return HorillaRedirect(
+            return StafflaneRedirect(
                 request, message=_("No Employee found matching the query.")
             )
         groups = employee.employee_user_id.groups.all
@@ -193,7 +193,7 @@ class GroupAssignView(View):
         if form.is_valid():
             form.save()
             messages.success(request, _("Employee assigned to group"))
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
         return render(
             request,
             "cbv/auth/user_assign_to_group.html",

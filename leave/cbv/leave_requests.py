@@ -20,12 +20,12 @@ from base.decorators import manager_can_enter
 from base.filters import PenaltyFilter
 from base.methods import choosesubordinates, filtersubordinates, is_reportingmanager
 from base.models import PenaltyAccounts
-from horilla_views.cbv_methods import hx_request_required, login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import hx_request_required, login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from leave.filters import LeaveRequestFilter
@@ -49,7 +49,7 @@ class LeaveRequestsView(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("leave.view_leaverequest"), name="dispatch")
-class LeaveRequestsListView(HorillaListView):
+class LeaveRequestsListView(StafflaneListView):
     """
     Lits view of the page
     """
@@ -193,7 +193,7 @@ class LeaveRequestsListView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("leave.view_leaverequest"), name="dispatch")
-class LeaveRequestsNavView(HorillaNavView):
+class LeaveRequestsNavView(StafflaneNavView):
     """
     nav bar
     """
@@ -296,7 +296,7 @@ class LeaveRequestsExportNav(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("leave.view_leaverequest"), name="dispatch")
-class LeaveRequestsDetailView(HorillaDetailedView):
+class LeaveRequestsDetailView(StafflaneDetailedView):
     """
     detail view of page
     """
@@ -353,7 +353,7 @@ class LeaveRequestsDetailView(HorillaDetailedView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("leave.add_leaverequest"), name="dispatch")
-class LeaveRequestFormView(HorillaFormView):
+class LeaveRequestFormView(StafflaneFormView):
     """
     form view
     """
@@ -547,7 +547,7 @@ class LeaveClashListView(LeaveRequestsListView):
     """
 
     def get_queryset(self):
-        queryset = HorillaListView.get_queryset(self)
+        queryset = StafflaneListView.get_queryset(self)
         pk = self.kwargs.get("pk")
         record = LeaveRequest.objects.get(id=pk)
         if record.status != "rejected" or record.status != "cancelled":

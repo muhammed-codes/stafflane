@@ -47,9 +47,9 @@ from employee.models import (
     Policy,
     PolicyMultipleFile,
 )
-from horilla import horilla_middlewares
-from horilla_audit.models import AccountBlockUnblock
-from horilla_auth.models import HorillaUser
+from stafflane import stafflane_middlewares
+from stafflane_audit.models import AccountBlockUnblock
+from stafflane_auth.models import StafflaneUser
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +64,7 @@ class ModelForm(forms.ModelForm):
 
         reload_queryset(self.fields)
 
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
 
         today = date.today()
         now = datetime.now()
@@ -173,7 +173,7 @@ class ModelForm(forms.ModelForm):
 
 class UserForm(ModelForm):
     """
-    Form for HorillaUser model
+    Form for StafflaneUser model
     """
 
     class Meta:
@@ -182,12 +182,12 @@ class UserForm(ModelForm):
         """
 
         fields = ("groups",)
-        model = HorillaUser
+        model = StafflaneUser
 
 
 class UserPermissionForm(ModelForm):
     """
-    Form for HorillaUser model
+    Form for StafflaneUser model
     """
 
     class Meta:
@@ -196,7 +196,7 @@ class UserPermissionForm(ModelForm):
         """
 
         fields = ("groups", "user_permissions")
-        model = HorillaUser
+        model = StafflaneUser
 
 
 class EmployeeForm(ModelForm):

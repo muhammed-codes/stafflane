@@ -17,21 +17,21 @@ from django.utils.translation import gettext_lazy as _
 
 from base.context_processors import intial_notice_period
 from base.methods import eval_validate
-from horilla.methods import get_horilla_model_class
-from horilla_views.cbv_methods import (
+from stafflane.methods import get_stafflane_model_class
+from stafflane_views.cbv_methods import (
     hx_request_required,
     login_required,
     permission_required,
 )
-from horilla_views.generic.cbv.kanban import HorillaKanbanView
-from horilla_views.generic.cbv.pipeline import Pipeline
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
-    HorillaSectionView,
-    HorillaTabView,
+from stafflane_views.generic.cbv.kanban import StafflaneKanbanView
+from stafflane_views.generic.cbv.pipeline import Pipeline
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneSectionView,
+    StafflaneTabView,
 )
 from notifications.signals import notify
 from offboarding.cbv_decorators import (
@@ -106,7 +106,7 @@ def offboarding_pipeline_modal_success_response(request) -> HttpResponse:
 @method_decorator(
     offboarding_manager_can_enter("offboarding.add_offboardingstage"), name="dispatch"
 )
-class OffboardingStageFormView(HorillaFormView):
+class OffboardingStageFormView(StafflaneFormView):
     """
     form view for create button
     """
@@ -142,7 +142,7 @@ class OffboardingStageFormView(HorillaFormView):
 @method_decorator(
     any_manager_can_enter("offboarding.add_offboardingemployee"), name="dispatch"
 )
-class OffboardingStageAddEmployeeForm(HorillaFormView):
+class OffboardingStageAddEmployeeForm(StafflaneFormView):
     """
     form view for create button
     """
@@ -193,7 +193,7 @@ class OffboardingStageAddEmployeeForm(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("offboarding.add_offboarding"), name="dispatch")
-class OffboardingCreateFormView(HorillaFormView):
+class OffboardingCreateFormView(StafflaneFormView):
     """
     form view for create and edit offboarding
     """
@@ -228,7 +228,7 @@ class OffboardingCreateFormView(HorillaFormView):
     offboarding_or_stage_manager_can_enter("offboarding.add_offboardingtask"),
     name="dispatch",
 )
-class OffboardingTaskFormView(HorillaFormView):
+class OffboardingTaskFormView(StafflaneFormView):
     """
     form view for create and edit offboarding tasks
     """
@@ -273,7 +273,7 @@ class OffboardingTaskFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class ExitProcessDetailView(HorillaDetailedView):
+class ExitProcessDetailView(StafflaneDetailedView):
     """
     detail view
     """
@@ -301,7 +301,7 @@ class ExitProcessDetailView(HorillaDetailedView):
 
 
 @method_decorator(login_required, name="dispatch")
-class OffboardingPipelineView(HorillaSectionView):
+class OffboardingPipelineView(StafflaneSectionView):
     """
     Offboarding Pipeline View
     """
@@ -313,7 +313,7 @@ class OffboardingPipelineView(HorillaSectionView):
 
 
 @method_decorator(login_required, name="dispatch")
-class OffboardingPipelineNav(HorillaNavView):
+class OffboardingPipelineNav(StafflaneNavView):
     """
     Offboarding Pipeline Navigation View
     """
@@ -365,7 +365,7 @@ class OffboardingPipelineNav(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class PipeLineTabView(HorillaTabView):
+class PipeLineTabView(StafflaneTabView):
     """
     Pipeline Tab View
     """
@@ -520,7 +520,7 @@ class OffboardingPipelineStage(Pipeline):
 
 
 @method_decorator(login_required, name="dispatch")
-class OffboardingKanbanView(HorillaKanbanView):
+class OffboardingKanbanView(StafflaneKanbanView):
     """
     Offboarding Kanban View
     """
@@ -661,7 +661,7 @@ class OffboardingKanbanView(HorillaKanbanView):
 
 
 @method_decorator(login_required, name="dispatch")
-class OffboardingEmployeeList(HorillaListView):
+class OffboardingEmployeeList(StafflaneListView):
     """
     Offboarding Employee List View
     """
@@ -852,7 +852,7 @@ class OffboardingEmployeeList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class DashboardTaskListview(HorillaListView):
+class DashboardTaskListview(StafflaneListView):
     """
     For dashboard task status table
     """
@@ -887,7 +887,7 @@ if apps.is_installed("asset"):
     @method_decorator(
         any_manager_can_enter("offboarding.view_offboarding"), name="dispatch"
     )
-    class DashboardNotReturndAsssets(HorillaListView):
+    class DashboardNotReturndAsssets(StafflaneListView):
         """
         For dashboard task status table
         """
@@ -897,7 +897,7 @@ if apps.is_installed("asset"):
         show_toggle_form = False
 
         def __init__(self, *args, **kwargs):
-            AssetAssignment = get_horilla_model_class(
+            AssetAssignment = get_stafflane_model_class(
                 app_label="asset", model="assetassignment"
             )
             self.model = AssetAssignment  # 809
@@ -943,7 +943,7 @@ if apps.is_installed("pms"):
     @method_decorator(
         any_manager_can_enter("offboarding.view_offboarding"), name="dispatch"
     )
-    class DashboardFeedbackView(HorillaListView):
+    class DashboardFeedbackView(StafflaneListView):
         """
         For dashboard task status table
         """
@@ -959,7 +959,7 @@ if apps.is_installed("pms"):
         ]
 
         def __init__(self, *args, **kwargs):
-            self.Feedback = get_horilla_model_class(app_label="pms", model="feedback")
+            self.Feedback = get_stafflane_model_class(app_label="pms", model="feedback")
             self.model = self.Feedback  # 809
             super().__init__(*args, **kwargs)
 

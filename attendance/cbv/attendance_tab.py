@@ -17,12 +17,12 @@ from attendance.models import Attendance
 from base.methods import filtersubordinates
 from base.request_and_approve import paginator_qry
 from employee.models import Employee
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import HorillaListView, HorillaTabView
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import StafflaneListView, StafflaneTabView
 
 
 @method_decorator(login_required, name="dispatch")
-class AttendanceTabView(HorillaTabView):
+class AttendanceTabView(StafflaneTabView):
     """
     generic tab view for attendance
     """

@@ -7,8 +7,8 @@ from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import HorillaFormView, HorillaListView
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import StafflaneFormView, StafflaneListView
 from recruitment.cbv_decorators import manager_can_enter
 from recruitment.forms import SkillZoneCandidateForm, SkillZoneCreateForm
 from recruitment.models import Candidate, SkillZone, SkillZoneCandidate
@@ -16,7 +16,7 @@ from recruitment.models import Candidate, SkillZone, SkillZoneCandidate
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("recruitment.add_skillzone"), name="dispatch")
-class SkillZoneFormView(HorillaFormView):
+class SkillZoneFormView(StafflaneFormView):
     """
     form view for create skill zone
     """
@@ -49,7 +49,7 @@ class SkillZoneFormView(HorillaFormView):
 @method_decorator(
     manager_can_enter("recruitment.add_skillzonecandidate"), name="dispatch"
 )
-class SkillZoneCandidateFormView(HorillaFormView):
+class SkillZoneCandidateFormView(StafflaneFormView):
     """
     form view for create skill zone candidate
     """
@@ -87,7 +87,7 @@ class SkillZoneCandidateFormView(HorillaFormView):
 @method_decorator(
     manager_can_enter("recruitment.add_skillzonecandidate"), name="dispatch"
 )
-class SkillZoneProfileListView(HorillaListView):
+class SkillZoneProfileListView(StafflaneListView):
     """
     Skill Zone Candidate profile List View
     """

@@ -11,8 +11,8 @@ from django.utils.translation import gettext_lazy as _
 
 from base.filters import JobRoleFilter
 from base.models import JobPosition
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import HorillaListView
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import StafflaneListView
 from recruitment.cbv_decorators import manager_can_enter
 from recruitment.filters import CandidateFilter, RecruitmentFilter, SkillZoneFilter
 from recruitment.models import Candidate, Recruitment, SkillZone
@@ -22,7 +22,7 @@ from recruitment.models import Candidate, Recruitment, SkillZone
 @method_decorator(
     manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class SkillZoneStatusList(HorillaListView):
+class SkillZoneStatusList(StafflaneListView):
     """
     List view for skill zone status in recruitment dashboard
     """
@@ -54,7 +54,7 @@ class SkillZoneStatusList(HorillaListView):
 @method_decorator(
     manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class CandidateOnOnboardList(HorillaListView):
+class CandidateOnOnboardList(StafflaneListView):
     """
     List view for candidate on onboard in recruitment dashboard
     """
@@ -83,7 +83,7 @@ class CandidateOnOnboardList(HorillaListView):
 @method_decorator(
     manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class CurrentHiringList(HorillaListView):
+class CurrentHiringList(StafflaneListView):
     """
     List view for hiring in each job position in dashboard
     """
@@ -141,7 +141,7 @@ class CurrentHiringList(HorillaListView):
 @method_decorator(
     manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class OnGoingRecruitmentList(HorillaListView):
+class OnGoingRecruitmentList(StafflaneListView):
     """
     List view for ongoing recruitment and its managers in  dashboard
     """

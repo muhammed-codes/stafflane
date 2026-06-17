@@ -17,7 +17,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.stafflane_company_manager import StafflaneCompanyManager
 from base.models import (
     Company,
     CompanyLeaves,
@@ -28,13 +28,13 @@ from base.models import (
     clear_messages,
 )
 from employee.models import Employee, EmployeeWorkInformation
-from horilla import horilla_middlewares
-from horilla.horilla_middlewares import _thread_locals
-from horilla.methods import get_horilla_model_class
-from horilla.models import HorillaModel, upload_path
-from horilla_audit.methods import get_diff
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
-from horilla_views.cbv_methods import render_template
+from stafflane import stafflane_middlewares
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.methods import get_stafflane_model_class
+from stafflane.models import StafflaneModel, upload_path
+from stafflane_audit.methods import get_diff
+from stafflane_audit.models import StafflaneAuditInfo, StafflaneAuditLog
+from stafflane_views.cbv_methods import render_template
 from leave.methods import (
     calculate_requested_days,
     company_leave_dates_list,
@@ -181,7 +181,7 @@ WEEK_DAYS = [
 ]
 
 
-class LeaveTypeCondition(HorillaModel):
+class LeaveTypeCondition(StafflaneModel):
     """
     Configurable conditions that restrict leave type assignment to eligible employees.
     Mirrors the allowance condition pattern for consistency.
@@ -230,7 +230,7 @@ class LeaveTypeCondition(HorillaModel):
             )
 
 
-class LeaveType(HorillaModel):
+class LeaveType(StafflaneModel):
     icon = models.ImageField(
         null=True, blank=True, upload_to=upload_path, verbose_name=_("Icon")
     )
@@ -344,7 +344,7 @@ class LeaveType(HorillaModel):
             "Eligibility conditions evaluated before assigning this leave type to an employee"
         ),
     )
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = StafflaneCompanyManager(related_company_field="company_id")
 
     class Meta:
         ordering = ["-id"]
@@ -418,7 +418,7 @@ class LeaveType(HorillaModel):
         return expired_date
 
     def save(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         selected_company = request.session.get("selected_company")
         if (
             not self.id
@@ -612,7 +612,7 @@ class LeaveType(HorillaModel):
             self.payment_percentage = None
 
 
-class Holiday(HorillaModel):
+class Holiday(StafflaneModel):
     name = models.CharField(max_length=30, null=False, verbose_name=_("Name"))
     start_date = models.DateField(verbose_name=_("Start Date"))
     end_date = models.DateField(null=True, blank=True, verbose_name=_("End Date"))
@@ -620,7 +620,7 @@ class Holiday(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = StafflaneCompanyManager(related_company_field="company_id")
 
     def __str__(self):
         return self.name
@@ -659,7 +659,7 @@ class Holiday(HorillaModel):
         )
 
 
-class CompanyLeave(HorillaModel):
+class CompanyLeave(StafflaneModel):
     based_on_week = models.CharField(
         max_length=100, choices=WEEKS, blank=True, null=True
     )
@@ -667,7 +667,7 @@ class CompanyLeave(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = StafflaneCompanyManager(related_company_field="company_id")
 
     class Meta:
         unique_together = ("based_on_week", "based_on_week_day")
@@ -746,7 +746,7 @@ class CompanyLeave(HorillaModel):
         return url
 
 
-class AvailableLeave(HorillaModel):
+class AvailableLeave(StafflaneModel):
     employee_id = models.ForeignKey(
         Employee,
         on_delete=models.CASCADE,
@@ -775,13 +775,13 @@ class AvailableLeave(HorillaModel):
     expired_date = models.DateField(
         blank=True, null=True, verbose_name=_("CarryForward Expired Date")
     )
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
-    history = HorillaAuditLog(
+    history = StafflaneAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            StafflaneAuditInfo,
         ],
     )
 
@@ -1033,7 +1033,7 @@ def cal_effective_requested_days(start_date, end_date, leave_type_id, requested_
     return requested_days
 
 
-class LeaveRequest(HorillaModel):
+class LeaveRequest(StafflaneModel):
     employee_id = models.ForeignKey(
         Employee, on_delete=models.CASCADE, verbose_name=_("Employee")
     )
@@ -1081,10 +1081,10 @@ class LeaveRequest(HorillaModel):
     reject_reason = models.TextField(
         blank=True, verbose_name=_("Reject Reason"), max_length=255
     )
-    history = HorillaAuditLog(
+    history = StafflaneAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            StafflaneAuditInfo,
         ],
     )
     created_by = models.ForeignKey(
@@ -1094,7 +1094,7 @@ class LeaveRequest(HorillaModel):
         related_name="leave_request_created",
         verbose_name=_("Created By"),
     )
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -1187,7 +1187,7 @@ class LeaveRequest(HorillaModel):
         leave_requests_with_interview = []
         context = {"instance": self}
         if apps.is_installed("recruitment"):
-            Schedule = get_horilla_model_class(
+            Schedule = get_stafflane_model_class(
                 app_label="recruitment", model="interviewschedule"
             )
             interviews = Schedule.objects.filter(
@@ -1378,7 +1378,7 @@ class LeaveRequest(HorillaModel):
         leave_requests_with_interview = []
         context = {"instance": self}
         if apps.is_installed("recruitment"):
-            Schedule = get_horilla_model_class(
+            Schedule = get_stafflane_model_class(
                 app_label="recruitment", model="interviewschedule"
             )
             interviews = Schedule.objects.filter(
@@ -1617,7 +1617,7 @@ class LeaveRequest(HorillaModel):
         attachment = getattr(self, "attachment", None)
         requ_days = set(self.requested_dates())
         restricted_leaves = RestrictLeave.objects.all()
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
 
         # Check if leave type is assigned to employee
         if not AvailableLeave.objects.filter(
@@ -1832,7 +1832,7 @@ class LeaveRequest(HorillaModel):
         return result
 
     def is_approved(self):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         if request:
             employee = Employee.objects.filter(employee_user_id=request.user).first()
             condition_approval = LeaveRequestConditionApproval.objects.filter(
@@ -1850,7 +1850,7 @@ class LeaveRequest(HorillaModel):
             # Update the leave clashes count for all relevant leave requests
             self.update_leave_clashes_count()
         else:
-            request = getattr(horilla_middlewares._thread_locals, "request", None)
+            request = getattr(stafflane_middlewares._thread_locals, "request", None)
             if request:
                 clear_messages(request)
                 messages.warning(
@@ -1912,7 +1912,7 @@ class LeaverequestFile(models.Model):
     file = models.FileField(upload_to=upload_path)
 
 
-class LeaverequestComment(HorillaModel):
+class LeaverequestComment(StafflaneModel):
     """
     LeaverequestComment Model
     """
@@ -1926,7 +1926,7 @@ class LeaverequestComment(HorillaModel):
         return f"{self.comment}"
 
 
-class LeaveAllocationRequest(HorillaModel):
+class LeaveAllocationRequest(StafflaneModel):
     leave_type_id = models.ForeignKey(
         LeaveType, on_delete=models.PROTECT, verbose_name=_("Leave type")
     )
@@ -1948,13 +1948,13 @@ class LeaveAllocationRequest(HorillaModel):
         max_length=30, choices=LEAVE_ALLOCATION_STATUS, default="requested"
     )
     reject_reason = models.TextField(blank=True)
-    history = HorillaAuditLog(
+    history = StafflaneAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            StafflaneAuditInfo,
         ],
     )
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -2110,7 +2110,7 @@ class LeaveAllocationRequest(HorillaModel):
         return url
 
 
-class LeaveallocationrequestComment(HorillaModel):
+class LeaveallocationrequestComment(StafflaneModel):
     """
     LeaveallocationrequestComment Model
     """
@@ -2132,7 +2132,7 @@ class LeaveRequestConditionApproval(models.Model):
     manager_id = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
 
-class RestrictLeave(HorillaModel):
+class RestrictLeave(StafflaneModel):
     title = models.CharField(max_length=200, verbose_name=_("Title"))
     start_date = models.DateField(verbose_name=_("Start Date"))
     end_date = models.DateField(verbose_name=_("End Date"))
@@ -2175,7 +2175,7 @@ class RestrictLeave(HorillaModel):
         on_delete=models.CASCADE,
         verbose_name=_("Company"),
     )
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = StafflaneCompanyManager(related_company_field="company_id")
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -2227,7 +2227,7 @@ class RestrictLeave(HorillaModel):
 
 if apps.is_installed("attendance"):
 
-    class CompensatoryLeaveRequest(HorillaModel):
+    class CompensatoryLeaveRequest(StafflaneModel):
         leave_type_id = models.ForeignKey(
             LeaveType, on_delete=models.PROTECT, verbose_name="Leave type"
         )
@@ -2245,13 +2245,13 @@ if apps.is_installed("attendance"):
             max_length=30, choices=LEAVE_ALLOCATION_STATUS, default="requested"
         )
         reject_reason = models.TextField(blank=True, max_length=255)
-        history = HorillaAuditLog(
+        history = StafflaneAuditLog(
             related_name="history_set",
             bases=[
-                HorillaAuditInfo,
+                StafflaneAuditInfo,
             ],
         )
-        objects = HorillaCompanyManager(
+        objects = StafflaneCompanyManager(
             related_company_field="employee_id__employee_work_info__company_id"
         )
 
@@ -2411,19 +2411,19 @@ if apps.is_installed("attendance"):
             super().save(*args, **kwargs)
 
 
-class LeaveGeneralSetting(HorillaModel):
+class LeaveGeneralSetting(StafflaneModel):
     """
     LeaveGeneralSettings
     """
 
     compensatory_leave = models.BooleanField(default=True)
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = StafflaneCompanyManager(related_company_field="company_id")
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
 
 
 if apps.is_installed("attendance"):
 
-    class CompensatoryLeaverequestComment(HorillaModel):
+    class CompensatoryLeaverequestComment(StafflaneModel):
         """
         CompensatoryLeaverequestComment Model
         """
@@ -2439,7 +2439,7 @@ if apps.is_installed("attendance"):
             return f"{self.comment}"
 
 
-class EmployeePastLeaveRestrict(HorillaModel):
+class EmployeePastLeaveRestrict(StafflaneModel):
     enabled = models.BooleanField(default=True)
 
 
@@ -2457,7 +2457,7 @@ if apps.is_installed("attendance"):
         #     """
         #     Overriding LeaveRequest model save method
         #     """
-        #     WorkRecords = get_horilla_model_class(
+        #     WorkRecords = get_stafflane_model_class(
         #         app_label="attendance", model="workrecords"
         #     )
         #     if (

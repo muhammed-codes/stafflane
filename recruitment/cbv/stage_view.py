@@ -14,12 +14,12 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from employee.models import Employee
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -40,7 +40,7 @@ class StageView(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="recruitment.view_stage"), name="dispatch")
-class StageList(HorillaListView):
+class StageList(StafflaneListView):
     """
     List view of stage
     """
@@ -147,7 +147,7 @@ class StageList(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="recruitment.view_stage"), name="dispatch")
-class StageNav(HorillaNavView):
+class StageNav(StafflaneNavView):
     """
     For nav bar
     """
@@ -175,7 +175,7 @@ class StageNav(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="recruitment.add_stage"), name="dispatch")
-class StageFormView(HorillaFormView):
+class StageFormView(StafflaneFormView):
     """
     Form View
     """
@@ -258,7 +258,7 @@ class StageFormView(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="recruitment.change_stage"), name="dispatch")
-class StageDuplicateForm(HorillaFormView):
+class StageDuplicateForm(StafflaneFormView):
     """
     Duplicate form view
     """
@@ -305,7 +305,7 @@ class StageDuplicateForm(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="recruitment.view_stage"), name="dispatch")
-class StageDetailView(HorillaDetailedView):
+class StageDetailView(StafflaneDetailedView):
     """
     detail view of page
     """

@@ -13,13 +13,13 @@ from django.urls import resolve, reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from leave.filters import UserLeaveRequestFilter
@@ -62,7 +62,7 @@ class MyLeaveRequestView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MainParentListView(HorillaListView):
+class MainParentListView(StafflaneListView):
     """
     main parent class for list view
     """
@@ -177,7 +177,7 @@ class MyLeaveRequestListView(MainParentListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MyLeaveRequestNavView(HorillaNavView):
+class MyLeaveRequestNavView(StafflaneNavView):
     """
     nav bar
     """
@@ -227,7 +227,7 @@ class MyLeaveRequestNavView(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MyLeaveRequestDetailView(HorillaDetailedView):
+class MyLeaveRequestDetailView(StafflaneDetailedView):
     """
     detail view of page
     """
@@ -254,7 +254,7 @@ class MyLeaveRequestDetailView(HorillaDetailedView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MyLeaveRequestForm(HorillaFormView):
+class MyLeaveRequestForm(StafflaneFormView):
     """
     form view
     """
@@ -312,7 +312,7 @@ class MyLeaveRequestForm(HorillaFormView):
         def _done():
             if self.request.META.get("HTTP_HX_REQUEST"):
                 return self.HttpResponse(targets_to_reload=["#userRequestReload"])
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
 
         emp = self.request.user.employee_get
         emp_id = emp.id
@@ -460,7 +460,7 @@ class MyLeaveRequestForm(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MyLeaveRequestSingleForm(HorillaFormView):
+class MyLeaveRequestSingleForm(StafflaneFormView):
     """
     single leave request form
     """
@@ -607,20 +607,20 @@ class MyLeaveRequestSingleForm(HorillaFormView):
                             redirect=reverse("request-view")
                             + f"?id={leave_request.id}",
                         )
-                        return HorillaRedirect(self.request)
+                        return StafflaneRedirect(self.request)
                     if len(
                         LeaveRequest.objects.filter(employee_id=employee)
                     ) == 1 or self.request.META.get("HTTP_REFERER").endswith(
                         "employee-profile/"
                     ):
-                        return HorillaRedirect(self.request)
+                        return StafflaneRedirect(self.request)
                 else:
                     form.add_error(
                         None,
                         _("You dont have enough leave days to make the request"),
                     )
 
-                return HorillaRedirect(self.request)
+                return StafflaneRedirect(self.request)
             else:
                 return self.form_invalid(form)
         return super().form_valid(form)

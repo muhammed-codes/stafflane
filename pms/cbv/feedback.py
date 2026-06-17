@@ -16,15 +16,15 @@ from base.decorators import manager_can_enter
 from base.methods import choosesubordinates, is_reportingmanager
 from employee.cbv.employee_profile import EmployeeProfileView
 from employee.models import Employee
-from horilla.http.response import HorillaRedirect
-from horilla_auth.models import HorillaUser
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
-    HorillaTabView,
+from stafflane.http.response import StafflaneRedirect
+from stafflane_auth.models import StafflaneUser
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneTabView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -44,7 +44,7 @@ class FeedbackViewPage(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class FeedbackListView(HorillaListView):
+class FeedbackListView(StafflaneListView):
     """
     list view
     """
@@ -167,7 +167,7 @@ class FeedbackListView(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class FeedbackGenericTabView(HorillaTabView):
+class FeedbackGenericTabView(StafflaneTabView):
     """
     tab view of the page
     """
@@ -297,7 +297,7 @@ class AllFeedbackTab(FeedbackListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AnonymousFeedbackTab(HorillaListView):
+class AnonymousFeedbackTab(StafflaneListView):
     """
     anonymous feedback tab
     """
@@ -362,7 +362,7 @@ class AnonymousFeedbackTab(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class FeedbacknavView(HorillaNavView):
+class FeedbacknavView(StafflaneNavView):
     """
     navbar
     """
@@ -430,7 +430,7 @@ class FeedbacknavView(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AddAnonymousFeedbackForm(HorillaFormView):
+class AddAnonymousFeedbackForm(StafflaneFormView):
     """
     form view
     """
@@ -471,7 +471,7 @@ class AddAnonymousFeedbackForm(HorillaFormView):
                 message = _("Feedback Created Successfully")
                 if feedback.based_on == "employee":
                     notify.send(
-                        HorillaUser.objects.filter(username="Horilla Bot").first(),
+                        StafflaneUser.objects.filter(username="Stafflane Bot").first(),
                         recipient=feedback.employee_id.employee_user_id,
                         verb="You received an anonymous feedback!",
                         verb_ar="لقد تلقيت تقييمًا مجهولًا!",
@@ -483,7 +483,7 @@ class AddAnonymousFeedbackForm(HorillaFormView):
                     )
             feedback.save()
             messages.success(self.request, message)
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
         return super().form_valid(form)
 
 
@@ -520,7 +520,7 @@ EmployeeProfileView.add_tab(
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("pms.change_feedback"), name="dispatch")
-class FeedbackUpdateFormView(HorillaFormView):
+class FeedbackUpdateFormView(StafflaneFormView):
     """
     Form View for update feedback
     """
@@ -575,7 +575,7 @@ class FeedbackUpdateFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AnounyFeedbackDetailView(HorillaDetailedView):
+class AnounyFeedbackDetailView(StafflaneDetailedView):
 
     model = AnonymousFeedback
 

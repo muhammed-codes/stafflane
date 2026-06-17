@@ -39,16 +39,16 @@ from base.methods import (
 )
 from base.models import Company
 from employee.models import Employee, EmployeeWorkInformation
-from horilla.decorators import (
+from stafflane.decorators import (
     handle_no_permission,
     hx_request_required,
     login_required,
     owner_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
-from horilla.http.response import HorillaRedirect
-from horilla.methods import dynamic_attr, get_horilla_model_class, get_urlencode
+from stafflane.group_by import group_by_queryset
+from stafflane.http.response import StafflaneRedirect
+from stafflane.methods import dynamic_attr, get_stafflane_model_class, get_urlencode
 
 # from leave.models import AvailableLeave
 from notifications.signals import notify
@@ -518,7 +518,7 @@ def update_allowance(request, allowance_id, **kwargs):
     instance = Allowance.find(allowance_id)
     is_htmx = request.headers.get("HX-Request") is not None
     if not instance:
-        return HorillaRedirect(request, message=_("Allowance not found."))
+        return StafflaneRedirect(request, message=_("Allowance not found."))
     form = forms.AllowanceForm(instance=instance)
     if request.method == "POST":
         form = forms.AllowanceForm(request.POST, instance=instance)
@@ -585,7 +585,7 @@ def update_allowance(request, allowance_id, **kwargs):
 #         request.path.split("/")[2] == "delete-employee-allowance"
 #         or not payroll.models.models.Allowance.objects.filter()
 #     ):
-#         return return HorillaRedirect(request)
+#         return return StafflaneRedirect(request)
 #     return redirect(filter_allowance)
 
 
@@ -622,7 +622,7 @@ def delete_allowance(request, allowance_id, emp_id=None):
             http_hx_target == "payroll-deduction-container"
             and not Deduction.objects.filter()
         ):
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
         if redirected_path:
             return redirect(redirected_path)
 
@@ -781,7 +781,7 @@ def update_deduction(request, deduction_id, **kwargs):
     instance = Deduction.find(deduction_id)
     is_htmx = request.headers.get("HX-Request") is not None
     if not instance:
-        return HorillaRedirect(request, message=_("Deduction not found."))
+        return StafflaneRedirect(request, message=_("Deduction not found."))
     form = forms.DeductionForm(instance=instance)
     if request.method == "POST":
         form = forms.DeductionForm(request.POST, instance=instance)
@@ -844,7 +844,7 @@ def delete_deduction(request, deduction_id, emp_id=None):
             http_hx_target == "payroll-deduction-container"
             and not Deduction.objects.filter()
         ):
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
         if redirected_path:
             return redirect(redirected_path)
 
@@ -1085,7 +1085,7 @@ def create_payslip(request, new_post_data=None):
                     ),
                     icon="close",
                 )
-                return HorillaRedirect(
+                return StafflaneRedirect(
                     request,
                     redirect_to=reverse(
                         "view-payslip", kwargs={"payslip_id": payslip.pk}
@@ -1116,7 +1116,7 @@ def validate_start_date(request):
             int(e) for e in request.GET.getlist("employee_id") if e.isdigit()
         ]
     except:
-        return HorillaRedirect(request, message=_("Invalid Request"))
+        return StafflaneRedirect(request, message=_("Invalid Request"))
 
     if start_date:
         start_datetime = datetime.strptime(start_date, "%Y-%m-%d").date()
@@ -1171,7 +1171,7 @@ def view_individual_payslip(request, employee_id, start_date, end_date):
 
     payslip_data = payroll_calculation(employee_id, start_date, end_date)
     if not payslip_data:
-        return HorillaRedirect(
+        return StafflaneRedirect(
             request,
             message=_(
                 "Payslip data not found for the specified employee and date range."
@@ -1326,7 +1326,7 @@ def payslip_export(request):
                 date_format = request.user.employee_get.get_date_format()
                 start_date = datetime.strptime(str(value), "%Y-%m-%d").date()
 
-                for format_name, format_string in settings.HORILLA_DATE_FORMATS.items():
+                for format_name, format_string in settings.STAFFLANE_DATE_FORMATS.items():
                     if format_name == date_format:
                         data = start_date.strftime(format_string)
             else:
@@ -1379,7 +1379,7 @@ def send_slip(request):
     ) or not len(email_backend.dynamic_from_email_with_display_name):
         messages.error(request, "Email server is not configured")
         if view:
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
         else:
             return redirect(reverse("payslip-list"))
 
@@ -1396,7 +1396,7 @@ def send_slip(request):
     mail_thread.start()
     messages.info(request, "Mail processing")
     if view:
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)
     else:
         return redirect(reverse("payslip-list"))
 
@@ -1407,11 +1407,11 @@ def add_bonus(request):
     employee_id = request.GET.get("employee_id")
     payslip_id = request.GET.get("payslip_id")
     if not employee_id or not payslip_id:
-        return HorillaRedirect(request, message=_("Missing required parameters."))
+        return StafflaneRedirect(request, message=_("Missing required parameters."))
     if payslip_id != "None" and payslip_id:
         instance = Payslip.find(payslip_id)
         if not instance:
-            return HorillaRedirect(request, _("Payslip not found"))
+            return StafflaneRedirect(request, _("Payslip not found"))
         form = forms.PayslipAllowanceForm(
             initial={"employee_id": employee_id, "date": instance.start_date}
         )
@@ -1445,7 +1445,7 @@ def add_bonus(request):
                         start_date=instance.start_date,
                         end_date=instance.end_date,
                     ).first()
-                    return HorillaRedirect(
+                    return StafflaneRedirect(
                         request,
                         redirect_to=reverse(
                             "view-payslip", kwargs={"payslip_id": payslip.id}
@@ -1458,7 +1458,7 @@ def add_bonus(request):
                             "No active contract found for  {} during this payslip period"
                         ).format(employee),
                     )
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
 
     return render(
         request,
@@ -1473,7 +1473,7 @@ def add_deduction(request):
     employee_id = request.GET.get("employee_id")
     payslip_id = request.GET.get("payslip_id")
     if not employee_id or not payslip_id:
-        return HorillaRedirect(request, message=_("Missing required parameters."))
+        return StafflaneRedirect(request, message=_("Missing required parameters."))
     instance = Payslip.objects.get(id=payslip_id)
 
     if request.method == "POST":
@@ -1509,7 +1509,7 @@ def add_deduction(request):
                 end_date=instance.end_date,
             ).first()
 
-            return HorillaRedirect(
+            return StafflaneRedirect(
                 request,
                 redirect_to=reverse("view-payslip", kwargs={"payslip_id": payslip.id}),
             )
@@ -1574,7 +1574,7 @@ def create_loan(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Loan created/updated")
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
     return render(
         request, "payroll/loan/form.html", {"form": form, "instance_id": instance_id}
     )
@@ -1588,10 +1588,10 @@ def view_installments(request):
     """
     loan_id = request.GET.get("loan_id")
     if not loan_id:
-        return HorillaRedirect(request, message=_("Missing required parameters."))
+        return StafflaneRedirect(request, message=_("Missing required parameters."))
     loan = LoanAccount.find(loan_id)
     if not loan:
-        return HorillaRedirect(request, message=_("Loan not found."))
+        return StafflaneRedirect(request, message=_("Loan not found."))
     installments = loan.deduction_ids.all()
 
     requests_ids_json = request.GET.get("instances_ids")
@@ -1651,7 +1651,7 @@ def edit_installment_amount(request):
     ded_id = request.GET.get("ded_id")
     amount_raw = request.POST.get("amount")
     if not loan_id or not ded_id or not amount_raw:
-        return HorillaRedirect(request, message=_("Missing required parameters."))
+        return StafflaneRedirect(request, message=_("Missing required parameters."))
     try:
         value = float(amount_raw) if amount_raw else 0.0
         if not math.isfinite(value):
@@ -1662,7 +1662,7 @@ def edit_installment_amount(request):
     loans = LoanAccount.objects.filter(id=loan_id)
     loan = loans.first()
     if not loan:
-        return HorillaRedirect(request, message=_("Loan not found."))
+        return StafflaneRedirect(request, message=_("Loan not found."))
     deductions = loan.deduction_ids.all().order_by("one_time_date")
     deduction = deductions.filter(id=ded_id).first()
     deductions_before = deductions.filter(one_time_date__lt=deduction.one_time_date)
@@ -1760,7 +1760,7 @@ def asset_fine(request):
     Add asset fine method
     """
     if apps.is_installed("asset"):
-        Asset = get_horilla_model_class(app_label="asset", model="asset")
+        Asset = get_stafflane_model_class(app_label="asset", model="asset")
     asset_id = request.GET["asset_id"]
     employee_id = request.GET["employee_id"]
     asset = Asset.objects.get(id=asset_id)
@@ -1846,7 +1846,7 @@ def create_reimbursement(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Reimbursement saved successfully")
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
     else:
         form = forms.ReimbursementForm(instance=instance)
 
@@ -1915,7 +1915,7 @@ def get_assigned_leaves(request):
             {"error": "Missing required parameters: employeeId"}, status=400
         )
     if apps.is_installed("leave"):
-        AvailableLeave = get_horilla_model_class(
+        AvailableLeave = get_stafflane_model_class(
             app_label="leave", model="availableleave"
         )
 
@@ -1945,7 +1945,7 @@ def approve_reimbursements(request):
     ids = request.GET.getlist("ids")
     status = request.GET.get("status")
     if not status:
-        return HorillaRedirect(request, message=_("Missing required parameters."))
+        return StafflaneRedirect(request, message=_("Missing required parameters."))
     if status == "canceled":
         status = "rejected"
     amount = (
@@ -2053,7 +2053,7 @@ def reimbursement_individual_view(request, instance_id):
     """
     reimbursement = Reimbursement.find(instance_id)
     if not reimbursement:
-        return HorillaRedirect(request, message=_("Reimbursement request not found."))
+        return StafflaneRedirect(request, message=_("Reimbursement request not found."))
     requests_ids_json = request.GET.get("instances_ids")
     if requests_ids_json:
         requests_ids = json.loads(requests_ids_json)
@@ -2079,7 +2079,7 @@ def reimbursement_attachments(request, instance_id):
     """
     reimbursement = Reimbursement.find(instance_id)
     if not reimbursement:
-        return HorillaRedirect(request, message=_("Reimbursement request not found."))
+        return StafflaneRedirect(request, message=_("Reimbursement request not found."))
     return render(
         request,
         "payroll/reimbursement/attachments.html",
@@ -2320,7 +2320,7 @@ def payslip_detailed_export_data(request):
                 date_format = request.user.employee_get.get_date_format()
                 start_date = datetime.strptime(str(value), "%Y-%m-%d").date()
 
-                for format_name, format_string in settings.HORILLA_DATE_FORMATS.items():
+                for format_name, format_string in settings.STAFFLANE_DATE_FORMATS.items():
                     if format_name == date_format:
                         data = start_date.strftime(format_string)
             else:

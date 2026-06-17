@@ -14,17 +14,17 @@ from django.utils.translation import gettext_lazy as _
 from base.filters import JobRoleFilter
 from base.forms import JobRoleForm
 from base.models import JobPosition, JobRole
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_jobrole"), name="dispatch")
-class JobRoleListView(HorillaListView):
+class JobRoleListView(StafflaneListView):
     """
     List view of the page
     """
@@ -56,7 +56,7 @@ class JobRoleListView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_jobrole"), name="dispatch")
-class JobRoleNav(HorillaNavView):
+class JobRoleNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -80,7 +80,7 @@ class JobRoleNav(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.add_jobrole"), name="dispatch")
-class JobRoleFormView(HorillaFormView):
+class JobRoleFormView(StafflaneFormView):
     """
     Create and edit form
     """

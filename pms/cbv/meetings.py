@@ -13,12 +13,12 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -37,7 +37,7 @@ class MeetingsView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MeetingsList(HorillaListView):
+class MeetingsList(StafflaneListView):
     """
     List view of the page
     """
@@ -95,7 +95,7 @@ class MeetingsList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MeetingsNav(HorillaNavView):
+class MeetingsNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -119,7 +119,7 @@ class MeetingsNav(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MeetingsDetailedView(HorillaDetailedView):
+class MeetingsDetailedView(StafflaneDetailedView):
     """
     detail view of page
     """
@@ -154,7 +154,7 @@ class MeetingsDetailedView(HorillaDetailedView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MeetingsFormView(HorillaFormView):
+class MeetingsFormView(StafflaneFormView):
     """
     Form View
     """
@@ -247,7 +247,7 @@ class MeetingsFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class MeetingResponseFormView(HorillaFormView):
+class MeetingResponseFormView(StafflaneFormView):
     """
     Form View
     """

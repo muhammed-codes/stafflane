@@ -10,13 +10,13 @@ from django.utils.translation import gettext_lazy as _
 
 from base.filters import EmployeeShiftFilter
 from base.models import EmployeeShift
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import HorillaListView, HorillaNavView
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import StafflaneListView, StafflaneNavView
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_employeeshift"), name="dispatch")
-class EmployeeShiftListView(HorillaListView):
+class EmployeeShiftListView(StafflaneListView):
     """
     List view of the employee shift page
     """
@@ -78,7 +78,7 @@ class EmployeeShiftListView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_employeeshift"), name="dispatch")
-class EmployeeShiftNav(HorillaNavView):
+class EmployeeShiftNav(StafflaneNavView):
     """
     Nav bar
     """

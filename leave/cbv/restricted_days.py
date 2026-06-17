@@ -10,12 +10,12 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from leave.filters import RestrictLeaveFilter
@@ -33,7 +33,7 @@ class RestrictedDaysView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class RestrictedDaysList(HorillaListView):
+class RestrictedDaysList(StafflaneListView):
     """
     List view of the resticted days page
     """
@@ -78,7 +78,7 @@ class RestrictedDaysList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class RestrictedDaysNav(HorillaNavView):
+class RestrictedDaysNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -113,7 +113,7 @@ class RestrictedDaysNav(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("leave.add_restrictleave"), name="dispatch")
-class RestrictedDaysFormView(HorillaFormView):
+class RestrictedDaysFormView(StafflaneFormView):
     """
     Create and edit form
     """
@@ -143,7 +143,7 @@ class RestrictedDaysFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class RestrictedDaysDetailView(HorillaDetailedView):
+class RestrictedDaysDetailView(StafflaneDetailedView):
     """
     detail view of page
     """

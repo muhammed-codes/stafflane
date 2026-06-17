@@ -13,17 +13,17 @@ from django.utils.translation import gettext_lazy as _
 from base.filters import EmployeeTypeFilter
 from base.forms import EmployeeTypeForm
 from base.models import EmployeeType
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_employeetype"), name="dispatch")
-class EmployeeTypeListView(HorillaListView):
+class EmployeeTypeListView(StafflaneListView):
     """
     List view of the resticted days page
     """
@@ -76,7 +76,7 @@ class EmployeeTypeListView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_employeetype"), name="dispatch")
-class EmployeeTypeNav(HorillaNavView):
+class EmployeeTypeNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -100,7 +100,7 @@ class EmployeeTypeNav(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.add_employeetype"), name="dispatch")
-class EmployeeTypeFormView(HorillaFormView):
+class EmployeeTypeFormView(StafflaneFormView):
     """
     Create and edit form
     """

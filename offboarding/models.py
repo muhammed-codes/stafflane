@@ -12,21 +12,21 @@ from django.urls import reverse, reverse_lazy
 from django.utils.timesince import timesince
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.stafflane_company_manager import StafflaneCompanyManager
 from base.models import Company
 from employee.models import Employee
-from horilla import horilla_middlewares
-from horilla.horilla_middlewares import _thread_locals
-from horilla.methods import get_horilla_model_class
-from horilla.models import HorillaModel, upload_path
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
-from horilla_views.cbv_methods import render_template
+from stafflane import stafflane_middlewares
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.methods import get_stafflane_model_class
+from stafflane.models import StafflaneModel, upload_path
+from stafflane_audit.models import StafflaneAuditInfo, StafflaneAuditLog
+from stafflane_views.cbv_methods import render_template
 from notifications.signals import notify
 
 # Create your models here.
 
 
-class Offboarding(HorillaModel):
+class Offboarding(StafflaneModel):
     """
     Offboarding model
     """
@@ -42,7 +42,7 @@ class Offboarding(HorillaModel):
         null=True,
         verbose_name="Company",
     )
-    objects = HorillaCompanyManager("company_id")
+    objects = StafflaneCompanyManager("company_id")
 
     def __str__(self):
         return self.title
@@ -68,7 +68,7 @@ class Offboarding(HorillaModel):
         return
 
 
-class OffboardingStage(HorillaModel):
+class OffboardingStage(StafflaneModel):
     """
     Offboarding model
     """
@@ -138,7 +138,7 @@ def create_initial_stage(sender, instance, created, **kwargs):
         initial_stage.save()
 
 
-class OffboardingStageMultipleFile(HorillaModel):
+class OffboardingStageMultipleFile(StafflaneModel):
     """
     OffboardingStageMultipleFile
     """
@@ -146,7 +146,7 @@ class OffboardingStageMultipleFile(HorillaModel):
     attachment = models.FileField(upload_to=upload_path)
 
 
-class OffboardingEmployee(HorillaModel):
+class OffboardingEmployee(StafflaneModel):
     """
     OffboardingEmployee model / Employee on stage
     """
@@ -166,7 +166,7 @@ class OffboardingEmployee(HorillaModel):
     notice_period_ends = models.DateField(
         null=True, blank=True, verbose_name=_("Notice Period Ends")
     )
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -339,7 +339,7 @@ class OffboardingEmployee(HorillaModel):
         return f'{reverse_lazy("get-manager-in")}?employee_id={self.employee_id.id}&offboarding=True'
 
 
-class ResignationLetter(HorillaModel):
+class ResignationLetter(StafflaneModel):
     """
     Resignation Request Employee model
     """
@@ -359,7 +359,7 @@ class ResignationLetter(HorillaModel):
     offboarding_employee_id = models.ForeignKey(
         OffboardingEmployee, on_delete=models.CASCADE, editable=False, null=True
     )
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -458,7 +458,7 @@ class ResignationLetter(HorillaModel):
             .first()
         )
         default_notice_end = (
-            get_horilla_model_class(
+            get_stafflane_model_class(
                 app_label="payroll", model="payrollgeneralsetting"
             ).objects.first()
             if apps.is_installed("payroll")
@@ -498,7 +498,7 @@ class ResignationLetter(HorillaModel):
         offboarding_employee.save()
 
 
-class OffboardingTask(HorillaModel):
+class OffboardingTask(StafflaneModel):
     """
     OffboardingTask model
     """
@@ -520,7 +520,7 @@ class OffboardingTask(HorillaModel):
         return self.title
 
 
-class EmployeeTask(HorillaModel):
+class EmployeeTask(StafflaneModel):
     """
     EmployeeTask model
     """
@@ -540,10 +540,10 @@ class EmployeeTask(HorillaModel):
     status = models.CharField(max_length=20, choices=statuses, default="todo")
     task_id = models.ForeignKey(OffboardingTask, on_delete=models.CASCADE)
     description = models.TextField(null=True, editable=False, max_length=255)
-    history = HorillaAuditLog(
+    history = StafflaneAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            StafflaneAuditInfo,
         ],
     )
 
@@ -566,7 +566,7 @@ class EmployeeTask(HorillaModel):
         )
 
 
-class ExitReason(HorillaModel):
+class ExitReason(StafflaneModel):
     """
     ExitReason model
     """
@@ -579,7 +579,7 @@ class ExitReason(HorillaModel):
     attachments = models.ManyToManyField(OffboardingStageMultipleFile)
 
 
-class OffboardingNote(HorillaModel):
+class OffboardingNote(StafflaneModel):
     """
     OffboardingNote
     """
@@ -602,7 +602,7 @@ class OffboardingNote(HorillaModel):
         ordering = ["-created_at"]
 
     def save(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         if request:
             updated_by = request.user.employee_get
             self.note_by = updated_by
@@ -611,11 +611,11 @@ class OffboardingNote(HorillaModel):
         return super().save(*args, **kwargs)
 
 
-class OffboardingGeneralSetting(HorillaModel):
+class OffboardingGeneralSetting(StafflaneModel):
     """
     OffboardingGeneralSettings
     """
 
     resignation_request = models.BooleanField(default=False)
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
-    objects = HorillaCompanyManager("company_id")
+    objects = StafflaneCompanyManager("company_id")

@@ -9,7 +9,7 @@ import logging
 
 from django.shortcuts import render
 
-from horilla.http.response import HorillaRedirect
+from stafflane.http.response import StafflaneRedirect
 
 logger = logging.getLogger(__name__)
 from datetime import date, datetime, timedelta
@@ -41,8 +41,8 @@ from base.context_processors import (
     timerunner_enabled,
 )
 from base.models import AttendanceAllowedIP, Company, EmployeeShiftDay
-from horilla.decorators import hx_request_required, login_required
-from horilla.horilla_middlewares import _thread_locals
+from stafflane.decorators import hx_request_required, login_required
+from stafflane.stafflane_middlewares import _thread_locals
 
 
 def late_come_create(attendance):
@@ -271,7 +271,7 @@ def clock_in(request):
             if start_time_sec > end_time_sec:
                 # night shift
                 # ------------------
-                # Night shift in Horilla consider a 24 hours from noon to next day noon,
+                # Night shift in Stafflane consider a 24 hours from noon to next day noon,
                 # the shift day taken today if the attendance clocked in after 12 O clock.
 
                 if mid_day_sec > now_sec:
@@ -309,7 +309,7 @@ def clock_in(request):
         )
     else:
         messages.error(request, _("Check in/Check out feature is not enabled."))
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)
 
 
 def clock_out_attendance_and_activity(employee, date_today, now, out_datetime=None):
@@ -526,4 +526,4 @@ def clock_out(request):
 
     else:
         messages.error(request, _("Check in/Check out feature is not enabled."))
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)

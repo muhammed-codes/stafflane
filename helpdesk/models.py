@@ -8,15 +8,15 @@ from django.urls import reverse_lazy
 from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.stafflane_company_manager import StafflaneCompanyManager
 from base.models import Company, Department, JobPosition, Tags
 from employee.models import Employee
-from horilla import horilla_middlewares
-from horilla.horilla_middlewares import _thread_locals
-from horilla.models import HorillaModel, upload_path
-from horilla_audit.methods import get_diff
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
-from horilla_views.cbv_methods import render_template
+from stafflane import stafflane_middlewares
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.models import StafflaneModel, upload_path
+from stafflane_audit.methods import get_diff
+from stafflane_audit.models import StafflaneAuditInfo, StafflaneAuditLog
+from stafflane_views.cbv_methods import render_template
 
 PRIORITY = [
     ("low", _("Low")),
@@ -47,7 +47,7 @@ TICKET_STATUS = [
 ]
 
 
-class DepartmentManager(HorillaModel):
+class DepartmentManager(StafflaneModel):
     manager = models.ForeignKey(
         Employee,
         verbose_name=_("Manager"),
@@ -64,7 +64,7 @@ class DepartmentManager(HorillaModel):
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
 
-    objects = HorillaCompanyManager("manager__employee_work_info__company_id")
+    objects = StafflaneCompanyManager("manager__employee_work_info__company_id")
 
     def get_update_url(self):
         """
@@ -95,14 +95,14 @@ class DepartmentManager(HorillaModel):
             raise ValidationError(_(f"This employee is not from {self.department} ."))
 
 
-class TicketType(HorillaModel):
+class TicketType(StafflaneModel):
     title = models.CharField(max_length=100, unique=True, verbose_name=_("Title"))
     type = models.CharField(choices=TICKET_TYPES, max_length=50, verbose_name=_("Type"))
     prefix = models.CharField(max_length=3, unique=True, verbose_name=_("Prefix"))
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = StafflaneCompanyManager(related_company_field="company_id")
 
     def __str__(self):
         return self.title
@@ -133,7 +133,7 @@ class TicketType(HorillaModel):
         verbose_name_plural = _("Ticket Types")
 
 
-class Ticket(HorillaModel):
+class Ticket(StafflaneModel):
 
     title = models.CharField(max_length=50)
     employee_id = models.ForeignKey(
@@ -163,13 +163,13 @@ class Ticket(HorillaModel):
     deadline = models.DateField(null=True, blank=True)
     tags = models.ManyToManyField(Tags, blank=True, related_name="ticket_tags")
     status = models.CharField(choices=TICKET_STATUS, default="new", max_length=50)
-    history = HorillaAuditLog(
+    history = StafflaneAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            StafflaneAuditInfo,
         ],
     )
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -410,7 +410,7 @@ class Ticket(HorillaModel):
         return get_diff(self)
 
 
-class ClaimRequest(HorillaModel):
+class ClaimRequest(StafflaneModel):
     ticket_id = models.ForeignKey(
         Ticket,
         on_delete=models.CASCADE,
@@ -440,7 +440,7 @@ class ClaimRequest(HorillaModel):
             raise ValidationError({"employee_id": _("This field is required.")})
 
 
-class Comment(HorillaModel):
+class Comment(StafflaneModel):
     comment = models.TextField(null=True, blank=True)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name="comment")
     employee_id = models.ForeignKey(
@@ -452,7 +452,7 @@ class Comment(HorillaModel):
         return self.comment
 
 
-class Attachment(HorillaModel):
+class Attachment(StafflaneModel):
     file = models.FileField(upload_to=upload_path)
     description = models.CharField(max_length=100, blank=True, null=True)
     format = models.CharField(max_length=50, blank=True, null=True)
@@ -491,7 +491,7 @@ class Attachment(HorillaModel):
         return os.path.basename(self.file.name)
 
 
-class FAQCategory(HorillaModel):
+class FAQCategory(StafflaneModel):
     title = models.CharField(max_length=30)
     description = models.TextField(blank=True, null=True, max_length=255)
     company_id = models.ForeignKey(
@@ -502,13 +502,13 @@ class FAQCategory(HorillaModel):
         verbose_name=_("Company"),
         on_delete=models.CASCADE,
     )
-    objects = HorillaCompanyManager()
+    objects = StafflaneCompanyManager()
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         selected_company = request.session.get("selected_company")
         if (
             not self.id
@@ -525,7 +525,7 @@ class FAQCategory(HorillaModel):
         verbose_name_plural = _("FAQ Categories")
 
 
-class FAQ(HorillaModel):
+class FAQ(StafflaneModel):
     question = models.CharField(max_length=255)
     answer = models.TextField()
     tags = models.ManyToManyField(Tags, blank=True)
@@ -533,13 +533,13 @@ class FAQ(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager()
+    objects = StafflaneCompanyManager()
 
     def __str__(self):
         return self.question
 
     def save(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         selected_company = request.session.get("selected_company")
         if (
             not self.id

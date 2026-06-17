@@ -1,10 +1,10 @@
-# Horilla HRMS
+# Stafflane HRMS
 
 [![License: LGPL v2.1](https://img.shields.io/badge/License-LGPL%20v2.1-blue.svg)](https://www.gnu.org/licenses/lgpl-2.1)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Django](https://img.shields.io/badge/django-5.0+-green.svg)](https://www.djangoproject.com/)
-[![Stars](https://img.shields.io/github/stars/horilla-opensource/horilla)](https://github.com/horilla-opensource/horilla/stargazers)
-[![Forks](https://img.shields.io/github/forks/horilla-opensource/horilla)](https://github.com/horilla-opensource/horilla/network/members)
+[![Stars](https://img.shields.io/github/stars/stafflane-opensource/stafflane)](https://github.com/stafflane-opensource/stafflane/stargazers)
+[![Forks](https://img.shields.io/github/forks/stafflane-opensource/stafflane)](https://github.com/stafflane-opensource/stafflane/network/members)
 
 > **A comprehensive, free, and open-source Human Resource Management System (HRMS) designed to streamline HR operations and enhance organizational efficiency.**
 
@@ -38,8 +38,8 @@
 
 ```bash
 # Clone the repository
-git clone -b dev/v2.0 https://github.com/horilla-opensource/horilla.git
-cd horilla
+git clone -b dev/v2.0 https://github.com/stafflane-opensource/stafflane.git
+cd stafflane
 
 # Start with Docker Compose
 docker-compose up -d
@@ -52,8 +52,8 @@ open http://localhost:8000
 
 ```bash
 # Clone and setup
-git clone -b dev/v2.0 https://github.com/horilla-opensource/horilla.git
-cd horilla
+git clone -b dev/v2.0 https://github.com/stafflane-opensource/stafflane.git
+cd stafflane
 
 # Create virtual environment
 python3 -m venv venv
@@ -80,7 +80,7 @@ python manage.py runserver
 
 For detailed installation instructions, configuration guides, and platform-specific setup instructions, please visit our comprehensive documentation:
 
-### 📖 [Complete Installation Guide → docs.horilla.com/technical/v2.0/ ](https://docs.horilla.com/technical/v2.0/)
+### 📖 [Complete Installation Guide → docs.stafflane.com/technical/v2.0/ ](https://docs.stafflane.com/technical/v2.0/)
 
 Our documentation includes:
 - **Step-by-step installation** for all supported platforms
@@ -90,12 +90,12 @@ Our documentation includes:
 - **Troubleshooting** common issues
 - **Advanced configuration** options
 
-<!-- Need help? Check out the [Installation FAQ](https://docs.horilla.com) or reach out to our [community support](#-support). -->
+<!-- Need help? Check out the [Installation FAQ](https://docs.stafflane.com) or reach out to our [community support](#-support). -->
 
 ## 🚀 Deployment
 
 For production deployment guides including Nginx, Apache, and cloud platforms:
-### 📖 [Deployment Guide → docs.horilla.com/technical/v2.0/doc/deployment/nginx-gunicorn](https://docs.horilla.com/technical/v2.0/doc/deployment/nginx-gunicorn)
+### 📖 [Deployment Guide → docs.stafflane.com/technical/v2.0/doc/deployment/nginx-gunicorn](https://docs.stafflane.com/technical/v2.0/doc/deployment/nginx-gunicorn)
 
 
 ## 🤝 Contributing
@@ -106,11 +106,11 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ```bash
 # Fork and clone your fork
-git clone -b dev/v2.0 https://github.com/YOUR_USERNAME/horilla.git
-cd horilla
+git clone -b dev/v2.0 https://github.com/YOUR_USERNAME/stafflane.git
+cd stafflane
 
 # Add upstream remote
-git remote add upstream https://github.com/horilla-opensource/horilla.git
+git remote add upstream https://github.com/stafflane-opensource/stafflane.git
 
 # Create feature branch
 git checkout -b feature/your-feature-name
@@ -140,7 +140,7 @@ pip install -r requirements.txt
 
 ### Reporting Security Issues
 
-Please report security vulnerabilities to **support@horilla.com**. Do not create public GitHub issues for security vulnerabilities.
+Please report security vulnerabilities to **support@stafflane.com**. Do not create public GitHub issues for security vulnerabilities.
 
 ### Security Best Practices
 
@@ -153,16 +153,16 @@ Please report security vulnerabilities to **support@horilla.com**. Do not create
 
 ### Community Support
 
-- 📖 **Documentation**: [docs.horilla.com](https://docs.horilla.com)
-- 💬 **GitHub Discussions**: [GitHub Discussions](https://github.com/horilla-opensource/horilla/discussions)
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/horilla-opensource/horilla/issues)
-- ✨ **Feature Requests**: [GitHub Issues](https://github.com/horilla-opensource/horilla/issues)
+- 📖 **Documentation**: [docs.stafflane.com](https://docs.stafflane.com)
+- 💬 **GitHub Discussions**: [GitHub Discussions](https://github.com/stafflane-opensource/stafflane/discussions)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/stafflane-opensource/stafflane/issues)
+- ✨ **Feature Requests**: [GitHub Issues](https://github.com/stafflane-opensource/stafflane/issues)
 
 ### Professional Support
 
 For enterprise support, custom development, and consulting services:
-- 📧 **Email**: support@horilla.com
-- 🌐 **Website**: [www.horilla.com](https://www.horilla.com)
+- 📧 **Email**: support@stafflane.com
+- 🌐 **Website**: [www.stafflane.com](https://www.stafflane.com)
 
 
 ## 📄 License
@@ -171,8 +171,8 @@ This project is licensed under the [LGPL-2.1 License](LICENSE) - see the LICENSE
 
 <div align="center">
 
-**Made with ❤️ by the Horilla Team**
+**Made with ❤️ by the Stafflane Team**
 
-[⭐ Star us on GitHub](https://github.com/horilla-opensource/horilla) | [🐛 Report Bug](https://github.com/horilla-opensource/horilla/issues) | [💡 Request Feature](https://github.com/horilla-opensource/horilla/issues)
+[⭐ Star us on GitHub](https://github.com/stafflane-opensource/stafflane) | [🐛 Report Bug](https://github.com/stafflane-opensource/stafflane/issues) | [💡 Request Feature](https://github.com/stafflane-opensource/stafflane/issues)
 
 </div>

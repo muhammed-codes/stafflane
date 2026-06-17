@@ -19,7 +19,7 @@ from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.stafflane_company_manager import StafflaneCompanyManager
 from base.methods import get_next_month_same_date
 from base.models import (
     Company,
@@ -32,11 +32,11 @@ from base.models import (
 )
 from employee.methods.duration_methods import strtime_seconds
 from employee.models import BonusPoint, Employee, EmployeeWorkInformation
-from horilla import horilla_middlewares
-from horilla.horilla_middlewares import _thread_locals
-from horilla.models import HorillaModel, upload_path
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
-from horilla_views.cbv_methods import render_template
+from stafflane import stafflane_middlewares
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.models import StafflaneModel, upload_path
+from stafflane_audit.models import StafflaneAuditInfo, StafflaneAuditLog
+from stafflane_views.cbv_methods import render_template
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +78,7 @@ def get_date_range(start_date, end_date):
     return date_list
 
 
-class FilingStatus(HorillaModel):
+class FilingStatus(StafflaneModel):
     """
     FilingStatus model
     """
@@ -111,7 +111,7 @@ class FilingStatus(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager()
+    objects = StafflaneCompanyManager()
 
     def __str__(self) -> str:
         return str(self.filing_status)
@@ -140,7 +140,7 @@ class FilingStatus(HorillaModel):
         verbose_name_plural = _("Filing Statuses")
 
 
-class Contract(HorillaModel):
+class Contract(StafflaneModel):
     """
     Contract Model
     """
@@ -279,14 +279,14 @@ class Contract(HorillaModel):
     )
 
     note = models.TextField(null=True, blank=True)
-    history = HorillaAuditLog(
+    history = StafflaneAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            StafflaneAuditInfo,
         ],
     )
 
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = StafflaneCompanyManager("employee_id__employee_work_info__company_id")
 
     def get_wage_type_display(self):
         """
@@ -538,7 +538,7 @@ class WorkRecord(models.Model):
     is_leave_record = models.BooleanField(default=False)
     day_percentage = models.FloatField(default=0)
     last_update = models.DateTimeField(null=True, blank=True)
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = StafflaneCompanyManager("employee_id__employee_work_info__company_id")
 
     def save(self, *args, **kwargs):
         self.last_update = timezone.now()
@@ -810,7 +810,7 @@ class MultipleCondition(models.Model):
     )
 
 
-class Allowance(HorillaModel):
+class Allowance(StafflaneModel):
     """
     Allowance model
     """
@@ -1037,7 +1037,7 @@ class Allowance(HorillaModel):
     )
     only_show_under_employee = models.BooleanField(default=False, editable=False)
     is_loan = models.BooleanField(default=False, editable=False)
-    objects = HorillaCompanyManager()
+    objects = StafflaneCompanyManager()
     other_conditions = models.ManyToManyField(
         MultipleCondition, blank=True, editable=False
     )
@@ -1371,14 +1371,14 @@ class Allowance(HorillaModel):
         return str(self.title)
 
     def save(self):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         selected_company = request.session.get("selected_company")
         if not self.id and selected_company and selected_company != "all":
             self.company_id = Company.find(selected_company)
         super().save()
 
 
-class Deduction(HorillaModel):
+class Deduction(StafflaneModel):
     """
     Deduction model
     """
@@ -1572,7 +1572,7 @@ class Deduction(HorillaModel):
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
     only_show_under_employee = models.BooleanField(default=False, editable=False)
-    objects = HorillaCompanyManager()
+    objects = StafflaneCompanyManager()
 
     is_installment = models.BooleanField(default=False, editable=False)
     other_conditions = models.ManyToManyField(
@@ -1871,14 +1871,14 @@ class Deduction(HorillaModel):
         return str(self.title)
 
     def save(self):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         selected_company = request.session.get("selected_company")
         if not self.id and selected_company and selected_company != "all":
             self.company_id = Company.find(selected_company)
         super().save()
 
 
-class Payslip(HorillaModel):
+class Payslip(StafflaneModel):
     """
     Payslip model
     """
@@ -1908,12 +1908,12 @@ class Payslip(HorillaModel):
         max_length=20, null=True, default="draft", choices=status_choices
     )
     sent_to_employee = models.BooleanField(null=True, default=False)
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = StafflaneCompanyManager("employee_id__employee_work_info__company_id")
     installment_ids = models.ManyToManyField(Deduction, editable=False)
-    history = HorillaAuditLog(
+    history = StafflaneAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            StafflaneAuditInfo,
         ],
     )
 
@@ -2077,7 +2077,7 @@ class Payslip(HorillaModel):
         ]
 
 
-class LoanAccount(HorillaModel):
+class LoanAccount(StafflaneModel):
     """
     This modal is used to store the loan Account details
     """
@@ -2121,7 +2121,7 @@ class LoanAccount(HorillaModel):
             null=True,
             editable=False,
         )
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = StafflaneCompanyManager("employee_id__employee_work_info__company_id")
 
     def __str__(self):
         return f"{self.title} - {self.employee_id}"
@@ -2264,7 +2264,7 @@ class ReimbursementMultipleAttachment(models.Model):
     objects = models.Manager()
 
 
-class Reimbursement(HorillaModel):
+class Reimbursement(StafflaneModel):
     """
     Reimbursement Model
     """
@@ -2334,13 +2334,13 @@ class Reimbursement(HorillaModel):
     allowance_id = models.ForeignKey(
         Allowance, on_delete=models.SET_NULL, null=True, editable=False
     )
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = StafflaneCompanyManager("employee_id__employee_work_info__company_id")
 
     class Meta:
         ordering = ["-id"]
 
     def save(self, *args, **kwargs) -> None:
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         amount_for_leave = (
             EncashmentGeneralSettings.objects.first().leave_amount
             if EncashmentGeneralSettings.objects.first()
@@ -2388,7 +2388,7 @@ class Reimbursement(HorillaModel):
                         bonus_points.save()
                     else:
                         request = getattr(
-                            horilla_middlewares._thread_locals, "request", None
+                            stafflane_middlewares._thread_locals, "request", None
                         )
                         if request:
                             messages.info(
@@ -2414,7 +2414,7 @@ class Reimbursement(HorillaModel):
                             assigned_leave.save()
                         else:
                             request = getattr(
-                                horilla_middlewares._thread_locals, "request", None
+                                stafflane_middlewares._thread_locals, "request", None
                             )
                             if request:
                                 messages.info(
@@ -2457,7 +2457,7 @@ class Reimbursement(HorillaModel):
                     self.allowance_id.delete()
 
     def delete(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         if self.status == "approved":
             message = messages.info(
                 request,
@@ -2570,7 +2570,7 @@ class ReimbursementFile(models.Model):
     objects = models.Manager()
 
 
-class ReimbursementrequestComment(HorillaModel):
+class ReimbursementrequestComment(StafflaneModel):
     """
     ReimbursementRequestComment Model
     """

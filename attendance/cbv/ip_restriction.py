@@ -3,12 +3,12 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from base.models import AttendanceAllowedIP
-from horilla_views.cbv_methods import (
+from stafflane_views.cbv_methods import (
     login_required,
     permission_required,
     render_template,
 )
-from horilla_views.generic.cbv.views import HorillaListView, HorillaNavView
+from stafflane_views.generic.cbv.views import StafflaneListView, StafflaneNavView
 
 
 @method_decorator(login_required, name="dispatch")
@@ -16,7 +16,7 @@ from horilla_views.generic.cbv.views import HorillaListView, HorillaNavView
     permission_required("attendance.view_attendanceallowedip"),
     name="dispatch",
 )
-class IpRestrictionList(HorillaListView):
+class IpRestrictionList(StafflaneListView):
     """
     List view of the page
     """
@@ -63,7 +63,7 @@ class IpRestrictionList(HorillaListView):
     permission_required("attendance.view_attendanceallowedip"),
     name="dispatch",
 )
-class IpRestrictionnav(HorillaNavView):
+class IpRestrictionnav(StafflaneNavView):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)

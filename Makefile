@@ -26,7 +26,7 @@ shell: ## Open shell in web container
 	docker compose exec web bash
 
 db-shell: ## Open PostgreSQL shell
-	docker compose exec db psql -U horilla_user -d horilla_db
+	docker compose exec db psql -U stafflane_user -d stafflane_db
 
 status: ## Show status of all services
 	docker compose ps

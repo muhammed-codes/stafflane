@@ -11,12 +11,12 @@ from django.utils.translation import gettext_lazy as _
 from django_filters import FilterSet
 
 from base.methods import reload_queryset
-from horilla.filters import HorillaFilterSet
+from stafflane.filters import StafflaneFilterSet
 
 from .models import Asset, AssetAssignment, AssetCategory, AssetLot, AssetRequest
 
 
-class CustomFilterSet(HorillaFilterSet):
+class CustomFilterSet(StafflaneFilterSet):
     """
     Custom FilterSet class that applies specific CSS classes to filter
     widgets.
@@ -377,7 +377,7 @@ class AssetHistoryReGroup:
     ]
 
 
-class AssetRenewalFilter(HorillaFilterSet):
+class AssetRenewalFilter(StafflaneFilterSet):
     """
     Filter set for the Asset Renewal page — expiring/expired active assignments.
     Filters operate on AssetAssignment with traversal into the related Asset.

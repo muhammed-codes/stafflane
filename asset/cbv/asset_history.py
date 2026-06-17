@@ -10,11 +10,11 @@ from django.utils.translation import gettext_lazy as _
 
 from asset.filters import AssetHistoryFilter
 from asset.models import AssetAssignment
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 
@@ -31,7 +31,7 @@ class AssetHistoryView(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("asset.view_assetassignment"), name="dispatch")
-class AssetHistorylistView(HorillaListView):
+class AssetHistorylistView(StafflaneListView):
     """
     list view
     """
@@ -68,7 +68,7 @@ class AssetHistorylistView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("asset.view_assetassignment"), name="dispatch")
-class AssetHistoryNavView(HorillaNavView):
+class AssetHistoryNavView(StafflaneNavView):
     """
     navbar
     """
@@ -93,7 +93,7 @@ class AssetHistoryNavView(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("asset.view_assetassignment"), name="dispatch")
-class AssetHistoryDetailView(HorillaDetailedView):
+class AssetHistoryDetailView(StafflaneDetailedView):
     """
     detail view of the page
     """

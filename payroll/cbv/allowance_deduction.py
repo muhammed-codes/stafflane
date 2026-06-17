@@ -12,11 +12,11 @@ from django.utils.translation import gettext_lazy as _
 
 from employee.models import Employee
 from employee.views import return_none
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaListView,
-    HorillaTabView,
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneListView,
+    StafflaneTabView,
 )
 from payroll.cbv.allowances import AllowanceListView
 from payroll.cbv.deduction import DeductionListView
@@ -36,7 +36,7 @@ operator_mapping = {
 
 
 @method_decorator(login_required, name="dispatch")
-class AllowanceDeductionTabView(HorillaTabView):
+class AllowanceDeductionTabView(StafflaneTabView):
     """
     generic tab view for allowance and deduction
     """
@@ -123,7 +123,7 @@ class AllowanceTabList(AllowanceListView):
         the employee's active contract and specific conditions
         """
 
-        queryset = HorillaListView.get_queryset(self)
+        queryset = StafflaneListView.get_queryset(self)
         pk = self.kwargs.get("pk")
         employee = Employee.objects.get(id=pk)
         active_contracts = (
@@ -240,7 +240,7 @@ class DeductionTab(DeductionListView):
         the employee's active contract and specific conditions
         """
 
-        queryset = HorillaListView.get_queryset(self)
+        queryset = StafflaneListView.get_queryset(self)
         pk = self.kwargs.get("pk")
         employee = Employee.objects.get(id=pk)
         active_contracts = (
@@ -293,7 +293,7 @@ class DeductionTab(DeductionListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class DeductionDetailView(HorillaDetailedView):
+class DeductionDetailView(StafflaneDetailedView):
     """
     Detail View
     """
@@ -320,7 +320,7 @@ class DeductionDetailView(HorillaDetailedView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AllowanceDetailView(HorillaDetailedView):
+class AllowanceDetailView(StafflaneDetailedView):
     """
     detail view for allowance tab
     """

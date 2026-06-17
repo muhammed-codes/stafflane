@@ -21,13 +21,13 @@ from attendance.methods.utils import get_employee_last_name
 from attendance.models import Attendance
 from base.methods import choosesubordinates, filtersubordinates, is_reportingmanager
 from employee.models import Employee
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
-    HorillaTabView,
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneTabView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -43,7 +43,7 @@ class AttendancesRequestView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AttendancesRequestTabView(HorillaTabView):
+class AttendancesRequestTabView(StafflaneTabView):
     """
     tabview of attendance request page
     """
@@ -82,7 +82,7 @@ Attendance.request_approved_by = request_approved_by
 
 
 @method_decorator(login_required, name="dispatch")
-class AttendancesRequestListView(HorillaListView):
+class AttendancesRequestListView(StafflaneListView):
     """
     list view
     """
@@ -263,7 +263,7 @@ class AttendanceListTab(AttendancesRequestListView):
 
 
 def _request_tab_badge_count(request, view_cls):
-    """Same queryset rules as the tab's HorillaListView (filters, subordinates)."""
+    """Same queryset rules as the tab's StafflaneListView (filters, subordinates)."""
     view = view_cls()
     view.request = request
     view.args = ()
@@ -283,7 +283,7 @@ def attendance_request_tabs_badge_counts(request):
 
 
 @method_decorator(login_required, name="dispatch")
-class AttendanceRequestNav(HorillaNavView):
+class AttendanceRequestNav(StafflaneNavView):
     """
     nav bar
     """
@@ -349,7 +349,7 @@ class AttendanceRequestNav(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AttendanceListTabDetailView(HorillaDetailedView):
+class AttendanceListTabDetailView(StafflaneDetailedView):
     """
     Detail view of page
     """
@@ -404,7 +404,7 @@ class AttendanceListTabDetailView(HorillaDetailedView):
 
 
 @method_decorator(login_required, name="dispatch")
-class NewAttendanceRequestFormView(HorillaFormView):
+class NewAttendanceRequestFormView(StafflaneFormView):
     """
     form view for create  attendance request
     """
@@ -450,7 +450,7 @@ class NewAttendanceRequestFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class BulkAttendanceRequestFormView(HorillaFormView):
+class BulkAttendanceRequestFormView(StafflaneFormView):
     """
     form view for create bulk  attendance request
     """
@@ -500,7 +500,7 @@ class BulkAttendanceRequestFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class UpdateAttendanceRequestFormView(HorillaFormView):
+class UpdateAttendanceRequestFormView(StafflaneFormView):
     """
     form view for update attendance request
     """

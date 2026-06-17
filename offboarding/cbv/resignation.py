@@ -10,16 +10,16 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from horilla_views.cbv_methods import (
+from stafflane_views.cbv_methods import (
     check_feature_enabled,
     login_required,
     permission_required,
 )
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from offboarding.filters import LetterFilter
@@ -57,7 +57,7 @@ class ResignationLettersView(TemplateView):
     check_feature_enabled("resignation_request", OffboardingGeneralSetting),
     name="dispatch",
 )
-class ResignationListView(HorillaListView):
+class ResignationListView(StafflaneListView):
     """
     list view
     """
@@ -144,7 +144,7 @@ class ResignationListView(HorillaListView):
     check_feature_enabled("resignation_request", OffboardingGeneralSetting),
     name="dispatch",
 )
-class ResinationLettersNav(HorillaNavView):
+class ResinationLettersNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -181,7 +181,7 @@ class ResinationLettersNav(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 # @method_decorator(check_feature_enabled("resignation_request",OffboardingGeneralSetting),name="dispatch")
-class ResignationLettersFormView(HorillaFormView):
+class ResignationLettersFormView(StafflaneFormView):
     """
     Create and edit form for resignations
     """
@@ -214,7 +214,7 @@ class ResignationLettersFormView(HorillaFormView):
     check_feature_enabled("resignation_request", OffboardingGeneralSetting),
     name="dispatch",
 )
-class ResignationLetterDetailView(HorillaDetailedView):
+class ResignationLetterDetailView(StafflaneDetailedView):
     """
     detail view of resignations
     """

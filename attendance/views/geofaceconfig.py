@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from horilla.decorators import login_required
+from stafflane.decorators import login_required
 
 
 @login_required

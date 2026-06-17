@@ -10,13 +10,13 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
-    HorillaTabView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneTabView,
     TemplateView,
 )
 from payroll.filters import LoanAccountFilter
@@ -36,7 +36,7 @@ class AdvanceSalaryView(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.view_loanaccount"), name="dispatch")
-class LoansGenericTab(HorillaTabView):
+class LoansGenericTab(StafflaneTabView):
     """
     Tab view for loans/advanced salary
     """
@@ -61,7 +61,7 @@ class LoansGenericTab(HorillaTabView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.view_loanaccount"), name="dispatch")
-class LoanListView(HorillaListView):
+class LoanListView(StafflaneListView):
     """
     List view for loan tab
     """
@@ -127,7 +127,7 @@ class AdvancedSalaryList(LoanListView):
         self.search_url = reverse("advanced-salary-list-view")
 
     def get_queryset(self):
-        queryset = HorillaListView.get_queryset(self)
+        queryset = StafflaneListView.get_queryset(self)
         queryset = queryset.filter(type="advanced_salary")
         return queryset
 
@@ -144,14 +144,14 @@ class FinesListView(LoanListView):
         self.search_url = reverse("fines-list-view")
 
     def get_queryset(self):
-        queryset = HorillaListView.get_queryset(self)
+        queryset = StafflaneListView.get_queryset(self)
         queryset = queryset.filter(type="fine")
         return queryset
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.view_loanaccount"), name="dispatch")
-class LoanNavView(HorillaNavView):
+class LoanNavView(StafflaneNavView):
     """
     Navbar for the laons/advance salary
     """
@@ -176,7 +176,7 @@ class LoanNavView(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.view_loanaccount"), name="dispatch")
-class LoanDetailView(HorillaDetailedView):
+class LoanDetailView(StafflaneDetailedView):
     """
     detail view for the loan page
     """
@@ -200,7 +200,7 @@ class LoanDetailView(HorillaDetailedView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.view_loanaccount"), name="dispatch")
-class LoanFormView(HorillaFormView):
+class LoanFormView(StafflaneFormView):
     """
     form view for create and edit loans
     """

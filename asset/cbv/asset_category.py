@@ -15,18 +15,18 @@ from asset.cbv.asset_batch_no import DynamicCreateBatchNo
 from asset.filters import AssetFilter
 from asset.forms import AssetCategoryForm, AssetForm, AssetReportForm
 from asset.models import Asset, AssetCategory, AssetDocuments, AssetReport
-from horilla_views.cbv_methods import (
+from stafflane_views.cbv_methods import (
     hx_request_required,
     login_required,
     permission_required,
 )
-from horilla_views.generic.cbv.views import HorillaFormView, HorillaNavView
-from horilla_views.views import HorillaDeleteConfirmationView
+from stafflane_views.generic.cbv.views import StafflaneFormView, StafflaneNavView
+from stafflane_views.views import StafflaneDeleteConfirmationView
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("asset.view_assetcategory"), name="dispatch")
-class AssetCategoryFormView(HorillaFormView):
+class AssetCategoryFormView(StafflaneFormView):
     """
     form view for create asset category
     """
@@ -58,7 +58,7 @@ class AssetCategoryFormView(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("asset.add_asset"), name="dispatch")
-class AssetFormView(HorillaFormView):
+class AssetFormView(StafflaneFormView):
     """
     form view for create asset
     """
@@ -95,7 +95,7 @@ class AssetFormView(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("asset.view_assetcategory"), name="dispatch")
-class AssetCategoryDuplicateFormView(HorillaFormView):
+class AssetCategoryDuplicateFormView(StafflaneFormView):
     """
     form view for create duplicate asset category
     """
@@ -133,7 +133,7 @@ class AssetCategoryDuplicateFormView(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("asset.view_asset"), name="dispatch")
-class AssetDuplicateFormView(HorillaFormView):
+class AssetDuplicateFormView(StafflaneFormView):
     """
     form view for create duplicate for asset
     """
@@ -174,7 +174,7 @@ class AssetDuplicateFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AssetReportFormView(HorillaFormView):
+class AssetReportFormView(StafflaneFormView):
     """
     form view for create button
     """
@@ -210,7 +210,7 @@ class AssetReportFormView(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("asset.view_asset"), name="dispatch")
-class AssetCategoryNav(HorillaNavView):
+class AssetCategoryNav(StafflaneNavView):
     """
     nav bar for asset category
     """
@@ -263,10 +263,10 @@ class AssetCategoryNav(HorillaNavView):
 
 
 @method_decorator(hx_request_required, name="dispatch")
-class AssetDeleteConfirmationView(HorillaDeleteConfirmationView):
+class AssetDeleteConfirmationView(StafflaneDeleteConfirmationView):
     generic_delete_url_name = "generic-delete-asset-category"
 
     def post(self, *args, **kwargs):
         super().post(*args, **kwargs)
         # asset-category-view uses `.filterButton` (theme nav may also have `#applyFilter`)
-        return HorillaFormView.HttpResponse(targets_to_reload=[".filterButton"])
+        return StafflaneFormView.HttpResponse(targets_to_reload=[".filterButton"])

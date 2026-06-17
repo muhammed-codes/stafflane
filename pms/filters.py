@@ -18,7 +18,7 @@ from django_filters import DateFilter, DateFromToRangeFilter
 
 from base.filters import FilterSet
 from base.methods import reload_queryset
-from horilla.filters import HorillaFilterSet
+from stafflane.filters import StafflaneFilterSet
 from pms.models import (
     AnonymousFeedback,
     BonusPointSetting,
@@ -107,7 +107,7 @@ class CustomFilterSet(django_filters.FilterSet):
                 field.lookup_expr = "icontains"
 
 
-class ActualObjectiveFilter(HorillaFilterSet):
+class ActualObjectiveFilter(StafflaneFilterSet):
     """
     ActualObjectiveFilter
     """
@@ -231,7 +231,7 @@ DUE_DATE_CHOICES = [
 ]
 
 
-class FeedbackFilter(HorillaFilterSet):
+class FeedbackFilter(StafflaneFilterSet):
     """
     Custom filter set for Feedback records.
 
@@ -454,7 +454,7 @@ class KeyResultFilter(CustomFilterSet):
         fields = "__all__"
 
 
-class ActualKeyResultFilter(HorillaFilterSet):
+class ActualKeyResultFilter(StafflaneFilterSet):
     """
     Filter through KeyResult model
     """
@@ -495,7 +495,7 @@ class ObjectiveReGroup:
     ]
 
 
-class EmployeeObjectiveFilter(HorillaFilterSet):
+class EmployeeObjectiveFilter(StafflaneFilterSet):
     """
     Filter through EmployeeObjective model
     """
@@ -652,7 +652,7 @@ class EmployeeObjectiveFilter(HorillaFilterSet):
         return empty.distinct()
 
 
-class MeetingsFilter(HorillaFilterSet):
+class MeetingsFilter(StafflaneFilterSet):
 
     search = django_filters.CharFilter(field_name="title", lookup_expr="icontains")
     date = django_filters.DateFilter(
@@ -730,7 +730,7 @@ class MeetingsFilter(HorillaFilterSet):
     #     return super().filter_queryset(queryset)
 
 
-class AnonymousFilter(HorillaFilterSet):
+class AnonymousFilter(StafflaneFilterSet):
     """
     Custom filter set for Anonymous records.
 
@@ -809,7 +809,7 @@ class QuestionTemplateFilter(FilterSet):
         ]
 
 
-class PeriodFilter(HorillaFilterSet):
+class PeriodFilter(StafflaneFilterSet):
 
     search = django_filters.CharFilter(
         field_name="period_name", lookup_expr="icontains"

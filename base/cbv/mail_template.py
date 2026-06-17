@@ -13,21 +13,21 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from base.forms import MailTemplateForm
-from base.models import HorillaMailTemplate
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import HorillaFormView, HorillaNavView
+from base.models import StafflaneMailTemplate
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import StafflaneFormView, StafflaneNavView
 
 
 @method_decorator(login_required, name="dispatch")
-@method_decorator(permission_required("base.add_horillamailtemplate"), name="dispatch")
-class MailTemplateFormView(HorillaFormView):
+@method_decorator(permission_required("base.add_stafflanemailtemplate"), name="dispatch")
+class MailTemplateFormView(StafflaneFormView):
     """
     form view for create and edit mail template
     """
 
     form_class = MailTemplateForm
-    model = HorillaMailTemplate
+    model = StafflaneMailTemplate
     template_name = "cbv/mail_template/form_inherit.html"
     new_display_title = _("Add Template")
 
@@ -47,23 +47,23 @@ class MailTemplateFormView(HorillaFormView):
             form.save()
 
             messages.success(self.request, message)
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
         return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
-@method_decorator(permission_required("base.add_horillamailtemplate"), name="dispatch")
-class MailTemplateDuplicateForm(HorillaFormView):
+@method_decorator(permission_required("base.add_stafflanemailtemplate"), name="dispatch")
+class MailTemplateDuplicateForm(StafflaneFormView):
     """
     from view for duplicate mail templates
     """
 
-    model = HorillaMailTemplate
+    model = StafflaneMailTemplate
     form_class = MailTemplateForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        original_object = HorillaMailTemplate.objects.get(id=self.kwargs["pk"])
+        original_object = StafflaneMailTemplate.objects.get(id=self.kwargs["pk"])
         form = self.form_class(instance=original_object)
 
         for field_name, field in form.fields.items():
@@ -97,13 +97,13 @@ class MailTemplateDuplicateForm(HorillaFormView):
             message = _("Template Added")
             messages.success(self.request, message)
             form.save()
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
         return self.form_invalid(form)
 
 
 @method_decorator(login_required, name="dispatch")
-@method_decorator(permission_required("base.view_horillamailtemplate"), name="dispatch")
-class MailTemplateNavView(HorillaNavView):
+@method_decorator(permission_required("base.view_stafflanemailtemplate"), name="dispatch")
+class MailTemplateNavView(StafflaneNavView):
     """
     Mail Template Nav View
     """

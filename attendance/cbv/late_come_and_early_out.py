@@ -14,11 +14,11 @@ from attendance.models import AttendanceLateComeEarlyOut
 from base.filters import PenaltyFilter
 from base.methods import filtersubordinates, is_reportingmanager
 from base.models import PenaltyAccounts
-from horilla_views.cbv_methods import hx_request_required, login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import hx_request_required, login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 
@@ -33,7 +33,7 @@ class LateComeAndEarlyOut(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class LateComeAndEarlyOutList(HorillaListView):
+class LateComeAndEarlyOutList(StafflaneListView):
     """
     List view
     """
@@ -107,7 +107,7 @@ class LateComeAndEarlyOutList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class LateComeAndEarlyOutListNav(HorillaNavView):
+class LateComeAndEarlyOutListNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -211,7 +211,7 @@ class LateEarlyExportView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class LateComeEarlyOutDetailView(HorillaDetailedView):
+class LateComeEarlyOutDetailView(StafflaneDetailedView):
     """
     Detail View
     """

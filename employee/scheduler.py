@@ -23,7 +23,7 @@ def block_unblock_disciplinary():
     """
     from base.models import EmployeeShiftSchedule
     from employee.models import DisciplinaryAction
-    from horilla_auth.models import HorillaUser
+    from stafflane_auth.models import StafflaneUser
 
     today = date.today()
     now = datetime.now().time()
@@ -90,12 +90,12 @@ def block_unblock_disciplinary():
                         user.save()
 
             if dis.days and active is not None:
-                HorillaUser.objects.filter(id__in=user_ids).update(is_active=active)
+                StafflaneUser.objects.filter(id__in=user_ids).update(is_active=active)
 
         elif dis.action.action_type == "dismissal":
             if today >= dis.start_date:
                 active = False
-                HorillaUser.objects.filter(id__in=user_ids).update(is_active=active)
+                StafflaneUser.objects.filter(id__in=user_ids).update(is_active=active)
 
 
 if not any(

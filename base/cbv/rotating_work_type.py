@@ -18,13 +18,13 @@ from base.forms import RotatingWorkTypeAssignExportForm, RotatingWorkTypeAssignF
 from base.methods import choosesubordinates, filtersubordinates, is_reportingmanager
 from base.models import RotatingWorkTypeAssign
 from employee.models import Employee
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import hx_request_required, login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import hx_request_required, login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -44,7 +44,7 @@ class RotatingWorkRequestView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class GeneralParent(HorillaListView):
+class GeneralParent(StafflaneListView):
     """
     main parent class for list view
     """
@@ -133,7 +133,7 @@ class RotatingWorkListView(GeneralParent):
 @method_decorator(
     manager_can_enter("base.view_rotatingworktypeassign"), name="dispatch"
 )
-class RotatingWorkNavView(HorillaNavView):
+class RotatingWorkNavView(StafflaneNavView):
     """
     Nav view of the page
     """
@@ -231,7 +231,7 @@ class RotatingWorkNavView(HorillaNavView):
 @method_decorator(
     manager_can_enter("base.view_rotatingworktypeassign"), name="dispatch"
 )
-class RotatingWorkDetailView(HorillaDetailedView):
+class RotatingWorkDetailView(StafflaneDetailedView):
     """
     Detail view of page
     """
@@ -290,7 +290,7 @@ class RotatingWorkExport(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("base.add_rotatingworktypeassign"), name="dispatch")
-class RotatingWorkTypeFormView(HorillaFormView):
+class RotatingWorkTypeFormView(StafflaneFormView):
     """
     form view
     """
@@ -360,7 +360,7 @@ class RotatingWorkTypeFormView(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("base.add_rotatingworktypeassign"), name="dispatch")
-class RotatingWorkTypeDuplicateForm(HorillaFormView):
+class RotatingWorkTypeDuplicateForm(StafflaneFormView):
     """
     duplicate from view
     """
@@ -396,6 +396,6 @@ class RotatingWorkTypeDuplicateForm(HorillaFormView):
             message = _("Rotating Work Assign Created")
             messages.success(self.request, message)
             form.save()
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
 
         return self.form_invalid(form)

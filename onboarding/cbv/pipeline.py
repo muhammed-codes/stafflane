@@ -14,20 +14,20 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from base.methods import eval_validate
-from horilla.horilla_middlewares import _thread_locals
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import (
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import (
     hx_request_required,
     login_required,
     render_template,
 )
-from horilla_views.generic.cbv.kanban import HorillaKanbanView
-from horilla_views.generic.cbv.pipeline import Pipeline
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
-    HorillaTabView,
+from stafflane_views.generic.cbv.kanban import StafflaneKanbanView
+from stafflane_views.generic.cbv.pipeline import Pipeline
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneTabView,
 )
 from onboarding import filters as onboarding_filters
 from onboarding import forms
@@ -55,9 +55,9 @@ class PipelineView(TemplateView):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class PipelineNav(HorillaNavView):
+class PipelineNav(StafflaneNavView):
     """
-    HorillaNavView
+    StafflaneNavView
     """
 
     search_url = reverse_lazy("cbv-pipeline-tab-onboarding")
@@ -107,7 +107,7 @@ class PipelineNav(HorillaNavView):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class RecruitmentTabView(HorillaTabView):
+class RecruitmentTabView(StafflaneTabView):
     """
     RecruitmentTabView
     """
@@ -374,7 +374,7 @@ class CandidateOnboardingDetail(CandidateDetail):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class CandidateList(HorillaListView):
+class CandidateList(StafflaneListView):
     """
     CandidateList
     """
@@ -549,7 +549,7 @@ class CandidateList(HorillaListView):
 
         if not request.user.is_authenticated:
             messages.error(request, _("You are not logged in."))
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
 
         self.ordered_ids_key = (
             f"ordered_ids_{recruitment_models.Candidate.__name__.lower()}"
@@ -579,7 +579,7 @@ class CandidateList(HorillaListView):
         stage_id = request.GET.get("onboarding_stage_id")
 
         if not stage_id:
-            return HorillaRedirect(
+            return StafflaneRedirect(
                 request, message=_("No stage found matching the query.")
             )
         return super().dispatch(request, *args, **kwargs)
@@ -655,7 +655,7 @@ class CandidateList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class CandidateKanbanView(HorillaKanbanView):
+class CandidateKanbanView(StafflaneKanbanView):
     """
     CandidateKanbanView
     """
@@ -768,7 +768,7 @@ class CandidateKanbanView(HorillaKanbanView):
 @method_decorator(
     stage_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class ChangeStage(HorillaFormView):
+class ChangeStage(StafflaneFormView):
     """
     Change Candidate stage
     """
@@ -800,7 +800,7 @@ class AssignTask(View):
             return super().dispatch(request, *args, **kwargs)
         except ObjectDoesNotExist:
             messages.error(request, _("Requested object does not exist"))
-            return HorillaRedirect(
+            return StafflaneRedirect(
                 request, message=_("Requested object does not exist")
             )
 

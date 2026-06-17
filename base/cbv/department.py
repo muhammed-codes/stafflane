@@ -14,17 +14,17 @@ from django.utils.translation import gettext_lazy as _
 from base.filters import DepartmentViewFilter
 from base.forms import DepartmentForm
 from base.models import Department
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_department"), name="dispatch")
-class DepartmentListView(HorillaListView):
+class DepartmentListView(StafflaneListView):
     """
     list view for department in settings
     """
@@ -81,7 +81,7 @@ class DepartmentListView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_department"), name="dispatch")
-class DepartmentNavView(HorillaNavView):
+class DepartmentNavView(StafflaneNavView):
     """
     nav bar of the department view
     """
@@ -105,7 +105,7 @@ class DepartmentNavView(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.add_department"), name="dispatch")
-class DepartmentCreateForm(HorillaFormView):
+class DepartmentCreateForm(StafflaneFormView):
     """
     form view for creating and editing departments in settings
     """

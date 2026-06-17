@@ -15,18 +15,18 @@ from django.utils.translation import gettext_lazy as _
 from base.filters import CompanyFilter
 from base.forms import CompanyForm
 from base.models import Company
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.forms import DynamicBulkUpdateForm
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.forms import DynamicBulkUpdateForm
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_company"), name="dispatch")
-class CompanyListView(HorillaListView):
+class CompanyListView(StafflaneListView):
     """
     list view for company in settings
     """
@@ -129,7 +129,7 @@ class CompanyListView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.view_company"), name="dispatch")
-class CompanyNavView(HorillaNavView):
+class CompanyNavView(StafflaneNavView):
     """
     nav bar of the department view
     """
@@ -153,7 +153,7 @@ class CompanyNavView(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.add_company"), name="dispatch")
-class CompanyCreateForm(HorillaFormView):
+class CompanyCreateForm(StafflaneFormView):
     """
     form view for creating and editing company in settings
     """

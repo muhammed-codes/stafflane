@@ -14,15 +14,15 @@ from django.utils.translation import gettext_lazy as _
 
 from employee import views as employee_view
 from employee.cbv.employee_profile import EmployeeProfileView
-from horilla_views.cbv_methods import (
+from stafflane_views.cbv_methods import (
     hx_request_required,
     login_required,
     permission_required,
 )
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -58,7 +58,7 @@ class PayslipView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class PayslipList(HorillaListView):
+class PayslipList(StafflaneListView):
     """
     list view
     """
@@ -176,7 +176,7 @@ class PayslipList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class PayslipNav(HorillaNavView):
+class PayslipNav(StafflaneNavView):
     """
     navbar
     """
@@ -291,7 +291,7 @@ class PayslipBulkExport(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.add_payslip"), name="dispatch")
-class PayrollCreateFormView(HorillaFormView):
+class PayrollCreateFormView(StafflaneFormView):
     """
     form view for creating payslip
     """

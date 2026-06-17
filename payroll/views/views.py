@@ -34,14 +34,14 @@ from base.methods import (
 )
 from base.models import Company
 from employee.models import Employee, EmployeeWorkInformation
-from horilla.decorators import (
+from stafflane.decorators import (
     hx_request_required,
     login_required,
     owner_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
-from horilla.http.response import HorillaRedirect
+from stafflane.group_by import group_by_queryset
+from stafflane.http.response import StafflaneRedirect
 from notifications.signals import notify
 from payroll.context_processors import get_active_employees
 from payroll.filters import ContractFilter, ContractReGroup, PayslipFilter
@@ -306,14 +306,14 @@ def contract_delete(request, contract_id):
                 urls = f"/payroll/single-contract-view/{next_instance}/"
                 params = f"?{previous_data}&instances_ids={instances_list}"
                 return redirect(urls + params)
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
         else:
             return redirect(f"/payroll/contract-filter?{request.GET.urlencode()}")
     except Contract.DoesNotExist:
         messages.error(request, _("Contract not found."))
     except ProtectedError:
         messages.error(request, _("You cannot delete this contract."))
-    return HorillaRedirect(request)
+    return StafflaneRedirect(request)
 
 
 @login_required
@@ -468,14 +468,14 @@ def settings(request):
             messages.success(request, _("Payroll settings updated."))
             if request.headers.get("HX-Request"):
                 return HttpResponse("")
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
         else:
             messages.error(request, "There was an error updating the currency.")
             if request.headers.get("HX-Request"):
                 return HttpResponse("", status=400)
     if request.headers.get("HX-Request"):
         return HttpResponse("", status=400)
-    return HorillaRedirect(request)
+    return StafflaneRedirect(request)
 
 
 @login_required
@@ -488,7 +488,7 @@ def update_payslip_status(request, payslip_id):
     view = request.POST.get("view")
     payslip = Payslip.objects.filter(id=payslip_id).first()
     if not payslip:
-        return HorillaRedirect(request, message=_("Payslip not found."))
+        return StafflaneRedirect(request, message=_("Payslip not found."))
     if payslip:
         payslip.status = status
         payslip.save()
@@ -572,11 +572,11 @@ def view_payslip_pdf(request, payslip_id):
             month_start_name = start_date.strftime("%B %d, %Y")
             month_end_name = end_date.strftime("%B %d, %Y")
             # Formatted date for each format
-            for format_name, format_string in pay_settings.HORILLA_DATE_FORMATS.items():
+            for format_name, format_string in pay_settings.STAFFLANE_DATE_FORMATS.items():
                 if format_name == date_format:
                     formatted_start_date = start_date.strftime(format_string)
 
-            for format_name, format_string in pay_settings.HORILLA_DATE_FORMATS.items():
+            for format_name, format_string in pay_settings.STAFFLANE_DATE_FORMATS.items():
                 if format_name == date_format:
                     formatted_end_date = end_date.strftime(format_string)
             data["month_start_name"] = month_start_name
@@ -660,7 +660,7 @@ def delete_payslip(request, payslip_id):
         )
         return response
     if not Payslip.objects.filter():
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)
     return redirect(reverse("payslip-list"))
 
 
@@ -1044,11 +1044,11 @@ def payslip_export(request):
             # Convert the string to a datetime.date object
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date()
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
-            for format_name, format_string in pay_settings.HORILLA_DATE_FORMATS.items():
+            for format_name, format_string in pay_settings.STAFFLANE_DATE_FORMATS.items():
                 if format_name == date_format:
                     formatted_start_date = start_date.strftime(format_string)
 
-            for format_name, format_string in pay_settings.HORILLA_DATE_FORMATS.items():
+            for format_name, format_string in pay_settings.STAFFLANE_DATE_FORMATS.items():
                 if format_name == date_format:
                     formatted_end_date = end_date.strftime(format_string)
 
@@ -1463,7 +1463,7 @@ def generate_payslip_pdf(template_path, context, html=False):
         HttpResponse: A response with the generated PDF file or raw HTML.
     """
 
-    from horilla.horilla_middlewares import _thread_locals
+    from stafflane.stafflane_middlewares import _thread_locals
 
     try:
         # Render the HTML content from the template and context
@@ -1563,7 +1563,7 @@ def payslip_pdf(request, id):
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
 
             # Format the start and end dates
-            for format_name, format_string in pay_settings.HORILLA_DATE_FORMATS.items():
+            for format_name, format_string in pay_settings.STAFFLANE_DATE_FORMATS.items():
                 if format_name == date_format:
                     formatted_start_date = start_date.strftime(format_string)
                     formatted_end_date = end_date.strftime(format_string)
@@ -1847,9 +1847,9 @@ def delete_payrollrequest_comment(request, comment_id):
     comment = ReimbursementrequestComment.objects.filter(id=comment_id)
     if not comment.exists():
         messages.error(request, _("Comment not found."))
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)
     comment.delete()
-    return HorillaRedirect(request, message=_("Comment deleted successfully!"))
+    return StafflaneRedirect(request, message=_("Comment deleted successfully!"))
 
 
 @login_required
@@ -1859,12 +1859,12 @@ def delete_reimbursement_comment_file(request):
     """
     ids = request.GET.getlist("ids")
     if not ids:
-        return HorillaRedirect(request, message=_("No file IDs provided for deletion."))
+        return StafflaneRedirect(request, message=_("No file IDs provided for deletion."))
     records = ReimbursementFile.objects.filter(id__in=ids)
     if not request.user.has_perm("payroll.delete_reimbursmentfile"):
         records = records.filter(employee_id__employee_user_id=request.user)
     records.delete()
-    return HorillaRedirect(request, message=_("File deleted successfully"))
+    return StafflaneRedirect(request, message=_("File deleted successfully"))
 
 
 @login_required
@@ -1874,7 +1874,7 @@ def initial_notice_period(request):
     This method is used to set initial value notice period
     """
     if not request.GET.get("notice_period"):
-        return HorillaRedirect(request, message=_("required parameter is missing"))
+        return StafflaneRedirect(request, message=_("required parameter is missing"))
 
     notice_period = eval_validate(request.GET["notice_period"])
     settings = PayrollGeneralSetting.objects.first()
@@ -1886,7 +1886,7 @@ def initial_notice_period(request):
     )
     if request.META.get("HTTP_HX_REQUEST"):
         return HttpResponse()
-    return HorillaRedirect(request)
+    return StafflaneRedirect(request)
 
 
 # ===========================Auto payslip generate================================
@@ -1919,7 +1919,7 @@ def create_or_update_auto_payslip(request, auto_id=None):
             messages.success(
                 request, _(f"Payslip Auto generate for {company} created successfully ")
             )
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
     return render(
         request, "payroll/settings/auto_payslip_create_or_update.html", {"form": form}
     )

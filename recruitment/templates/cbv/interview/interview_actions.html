@@ -1,6 +1,6 @@
-{% load i18n horillafilters %}
+{% load i18n stafflanefilters %}
 <div class="oh-btn-group" onclick="event.stopPropagation()">
-	{% if "horilla_meet"|app_installed and "horilla_meet"|integration_installed %}
+	{% if "stafflane_meet"|app_installed and "stafflane_meet"|integration_installed %}
 		{% if perms.recruitment.change_interviewschedule or request.user.employee_get in instance.employee_id.all %}
 			{% if instance.google_interviews.meeting.meet_url %}
 				<a
@@ -19,7 +19,7 @@
 				></a>
 			{% endif %}
 		{% endif %}
-		{% if perms.horilla_meet.add_googlemeeting %}
+		{% if perms.stafflane_meet.add_googlemeeting %}
 			{% if perms.recruitment.change_interviewschedule or request.user.employee_get in instance.employee_id.all %}
 				<a
 					title="{% trans 'Send Meeting Link' %}"
@@ -60,7 +60,7 @@
 
 <script>
 	$(document).ready(function(){
-		{% if "horilla_meet"|app_installed and "horilla_meet"|integration_installed %}
+		{% if "stafflane_meet"|app_installed and "stafflane_meet"|integration_installed %}
 			$(".createMeeting").on("click", function(){
 				var interviewID = $(this).data("id");
 				var interviewDate = $(this).data("date");

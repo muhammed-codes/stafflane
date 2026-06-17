@@ -15,13 +15,13 @@ from django.utils.translation import gettext_lazy as _
 from base.methods import choosesubordinates, filtersubordinates, is_reportingmanager
 from employee.cbv.employee_profile import EmployeeProfileView
 from employee.models import Employee
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
-    HorillaTabView,
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneTabView,
     TemplateView,
 )
 from leave.cbv.leave_tab import IndividualLeaveTab
@@ -41,7 +41,7 @@ class LeaveAllocationRequestView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class LeaveAllocationRequestList(HorillaListView):
+class LeaveAllocationRequestList(StafflaneListView):
     """
     List view of the page
     """
@@ -119,7 +119,7 @@ class LeaveAllocationRequestList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class LeaveAllocationRequestTab(HorillaTabView):
+class LeaveAllocationRequestTab(StafflaneTabView):
     """
     Tab View
     """
@@ -203,7 +203,7 @@ class LeaveAllocationRequests(LeaveAllocationRequestList):
 
 
 @method_decorator(login_required, name="dispatch")
-class LeaveAllocationRequestNav(HorillaNavView):
+class LeaveAllocationRequestNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -244,7 +244,7 @@ class LeaveAllocationRequestNav(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class LeaveAllocationRequestDetailView(HorillaDetailedView):
+class LeaveAllocationRequestDetailView(StafflaneDetailedView):
     """
     detail view of page
     """
@@ -288,7 +288,7 @@ class LeaveAllocationsRequestsTabDetailView(LeaveAllocationRequestDetailView):
 
 
 @method_decorator(login_required, name="dispatch")
-class LeaveAllocationRequestFormView(HorillaFormView):
+class LeaveAllocationRequestFormView(StafflaneFormView):
     """
     Form View
     """

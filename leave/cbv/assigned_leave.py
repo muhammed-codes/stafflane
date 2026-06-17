@@ -12,12 +12,12 @@ from django.utils.translation import gettext_lazy as _
 
 from base.decorators import manager_can_enter
 from base.methods import filtersubordinates
-from horilla_views.cbv_methods import hx_request_required, login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import hx_request_required, login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from leave.filters import AssignedLeaveFilter
@@ -37,7 +37,7 @@ class AssignedLeaveViewPage(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("leave.view_availableleave"), name="dispatch")
-class AssignedleaveList(HorillaListView):
+class AssignedleaveList(StafflaneListView):
     """
     list view of the page
     """
@@ -80,7 +80,7 @@ class AssignedleaveList(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("leave.view_availableleave"), name="dispatch")
-class AssignedLeaveNavView(HorillaNavView):
+class AssignedLeaveNavView(StafflaneNavView):
     """
     navbar of the page
     """
@@ -181,7 +181,7 @@ class AssignedLeaveExport(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("leave.view_availableleave"), name="dispatch")
-class AssignedLeaveDetailView(HorillaDetailedView):
+class AssignedLeaveDetailView(StafflaneDetailedView):
     """
     detail view
     """
@@ -206,7 +206,7 @@ class AssignedLeaveDetailView(HorillaDetailedView):
 
 
 # not done
-class AssignedLeaveFormView(HorillaFormView):
+class AssignedLeaveFormView(StafflaneFormView):
     """
     form view
     """

@@ -12,12 +12,12 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 from payroll.filters import PayslipAutoGenerateFilter
 from payroll.forms.component_forms import PayslipAutoGenerateForm
@@ -28,7 +28,7 @@ from payroll.models.models import PayslipAutoGenerate
 @method_decorator(
     permission_required(perm="payroll.view_payslipautogenerate"), name="dispatch"
 )
-class PaySlipAutomationListView(HorillaListView):
+class PaySlipAutomationListView(StafflaneListView):
     """
     List view of the page
     """
@@ -94,7 +94,7 @@ class PaySlipAutomationListView(HorillaListView):
 @method_decorator(
     permission_required(perm="payroll.view_payslipautogenerate"), name="dispatch"
 )
-class PaySlipAutomationNav(HorillaNavView):
+class PaySlipAutomationNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -119,7 +119,7 @@ class PaySlipAutomationNav(HorillaNavView):
 @method_decorator(
     permission_required(perm="payroll.change_payslipautogenerate"), name="dispatch"
 )
-class PaySlipAutomationFormView(HorillaFormView):
+class PaySlipAutomationFormView(StafflaneFormView):
     """
     Create and edit form
     """
@@ -195,4 +195,4 @@ class DeleteAutoPayslipView(View):
             messages.info(
                 request, _("Active 'Payslip auto generate' cannot be deleted.")
             )
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)

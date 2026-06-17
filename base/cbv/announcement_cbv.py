@@ -14,13 +14,13 @@ from base.forms import AnnouncementForm
 from base.methods import closest_numbers
 from base.models import Announcement, AnnouncementView, Attachment
 from employee.models import Employee
-from horilla.http.response import HorillaRedirect
-from horilla_auth.models import HorillaUser
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
+from stafflane.http.response import StafflaneRedirect
+from stafflane_auth.models import StafflaneUser
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
 )
 from notifications.signals import notify
 
@@ -39,7 +39,7 @@ BLOCKED_EXTENSIONS = {
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="base.add_announcement"), name="dispatch")
-class AnnouncementFormView(HorillaFormView):
+class AnnouncementFormView(StafflaneFormView):
     """
     form view for create button
     """
@@ -102,10 +102,10 @@ class AnnouncementFormView(HorillaFormView):
             anou.department.set(departments)
             anou.job_position.set(job_positions)
 
-            emp_dep = HorillaUser.objects.filter(
+            emp_dep = StafflaneUser.objects.filter(
                 employee_get__employee_work_info__department_id__in=departments
             )
-            emp_jobs = HorillaUser.objects.filter(
+            emp_jobs = StafflaneUser.objects.filter(
                 employee_get__employee_work_info__job_position_id__in=job_positions
             )
 
@@ -143,13 +143,13 @@ class AnnouncementFormView(HorillaFormView):
             )
 
             messages.success(self.request, message)
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
 
         return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
-class AnnouncementDetailView(HorillaDetailedView):
+class AnnouncementDetailView(StafflaneDetailedView):
 
     model = Announcement
     template_name = "announcement/announcement_one.html"
@@ -157,7 +157,7 @@ class AnnouncementDetailView(HorillaDetailedView):
     def get_context_data(self, **kwargs):
         import ast
 
-        from horilla.horilla_middlewares import _thread_locals
+        from stafflane.stafflane_middlewares import _thread_locals
 
         context = super().get_context_data(**kwargs)
 

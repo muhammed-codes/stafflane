@@ -17,13 +17,13 @@ from django.utils.formats import localize
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.stafflane_company_manager import StafflaneCompanyManager
 from base.models import Company
 from employee.models import Employee
-from horilla import horilla_middlewares
-from horilla.horilla_middlewares import _thread_locals
-from horilla.models import HorillaModel, upload_path
-from horilla_views.cbv_methods import render_template
+from stafflane import stafflane_middlewares
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.models import StafflaneModel, upload_path
+from stafflane_views.cbv_methods import render_template
 
 # Create your models here.
 
@@ -47,7 +47,7 @@ def validate_time_format(value):
         raise ValidationError(_("Invalid format")) from error
 
 
-class Project(HorillaModel):
+class Project(StafflaneModel):
     PROJECT_STATUS = [
         ("new", _("New")),
         ("in_progress", _("In Progress")),
@@ -81,7 +81,7 @@ class Project(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager("company_id")
+    objects = StafflaneCompanyManager("company_id")
 
     def get_description(self, length=50):
         """
@@ -245,7 +245,7 @@ class Project(HorillaModel):
 
     def save(self, *args, **kwargs):
         is_new, request = self.pk is None, getattr(
-            horilla_middlewares._thread_locals, "request", None
+            stafflane_middlewares._thread_locals, "request", None
         )
         if is_new and (cid := request.session.get("selected_company")) and cid != "all":
             self.company_id = Company.find(cid)
@@ -268,7 +268,7 @@ class Project(HorillaModel):
         ordering = ["-id"]
 
 
-class ProjectStage(HorillaModel):
+class ProjectStage(StafflaneModel):
     """
     ProjectStage model
     """
@@ -284,7 +284,7 @@ class ProjectStage(HorillaModel):
     )
     sequence = models.IntegerField(null=True, blank=True, editable=False)
     is_end_stage = models.BooleanField(default=False, verbose_name=_("Is end stage"))
-    objects = HorillaCompanyManager("project__company_id")
+    objects = StafflaneCompanyManager("project__company_id")
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -335,7 +335,7 @@ class ProjectStage(HorillaModel):
         verbose_name_plural = _("Project Stages")
 
 
-class Task(HorillaModel):
+class Task(StafflaneModel):
     """
     Task model
     """
@@ -375,7 +375,7 @@ class Task(HorillaModel):
     )
     description = models.TextField(verbose_name=_("Description"))
     sequence = models.IntegerField(default=0)
-    objects = HorillaCompanyManager("project__company_id")
+    objects = StafflaneCompanyManager("project__company_id")
 
     def clean(self) -> None:
         if self.end_date is not None and self.project.end_date is not None:
@@ -543,7 +543,7 @@ class Task(HorillaModel):
         return f"'{url_with_params}'" + "," + f"'{message}'"
 
 
-class TimeSheet(HorillaModel):
+class TimeSheet(StafflaneModel):
     """
     TimeSheet model
     """
@@ -586,7 +586,7 @@ class TimeSheet(HorillaModel):
         verbose_name=_("Status"),
     )
     description = models.TextField(blank=True, null=True, verbose_name=_("Description"))
-    objects = HorillaCompanyManager("project_id__company_id")
+    objects = StafflaneCompanyManager("project_id__company_id")
 
     class Meta:
         ordering = ("-id",)

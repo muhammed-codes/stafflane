@@ -12,11 +12,11 @@ from django.utils.translation import gettext_lazy as _
 
 from base.decorators import manager_can_enter
 from base.methods import is_reportingmanager
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from pms.filters import QuestionTemplateFilter
@@ -41,7 +41,7 @@ class QuestionTemplateView(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("pms.view_questiontemplate"), name="dispatch")
-class QuestionTemplateList(HorillaListView):
+class QuestionTemplateList(StafflaneListView):
     """
     List view of the question template page
     """
@@ -77,7 +77,7 @@ class QuestionTemplateList(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("pms.view_questiontemplate"), name="dispatch")
-class QuestionTemplateNav(HorillaNavView):
+class QuestionTemplateNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -102,7 +102,7 @@ class QuestionTemplateNav(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter("pms.add_questiontemplate"), name="dispatch")
-class QuestionTemplateFormView(HorillaFormView):
+class QuestionTemplateFormView(StafflaneFormView):
     """
     Form view
     """

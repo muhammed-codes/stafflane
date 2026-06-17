@@ -29,16 +29,16 @@ from attendance.methods.utils import (
     validate_time_format,
     validate_time_in_minutes,
 )
-from base.horilla_company_manager import HorillaCompanyManager
+from base.stafflane_company_manager import StafflaneCompanyManager
 from base.methods import is_company_leave, is_holiday
 from base.models import Company, EmployeeShift, EmployeeShiftDay, WorkType
 from employee.models import Employee
 
 # Create your models here.
-from horilla.methods import get_horilla_model_class
-from horilla.models import HorillaModel, upload_path
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
-from horilla_views.cbv_methods import render_template
+from stafflane.methods import get_stafflane_model_class
+from stafflane.models import StafflaneModel, upload_path
+from stafflane_audit.models import StafflaneAuditInfo, StafflaneAuditLog
+from stafflane_views.cbv_methods import render_template
 
 # to skip the migration issue with the old migrations
 _validate_time_in_minutes = validate_time_in_minutes
@@ -47,7 +47,7 @@ _validate_time_in_minutes = validate_time_in_minutes
 # Create your models here.
 
 
-class AttendanceActivity(HorillaModel):
+class AttendanceActivity(StafflaneModel):
     """
     AttendanceActivity model
     """
@@ -75,7 +75,7 @@ class AttendanceActivity(HorillaModel):
     clock_out_date = models.DateField(null=True, verbose_name=_("Out Date"))
     out_datetime = models.DateTimeField(null=True)
     clock_out = models.TimeField(null=True, verbose_name=_("Check Out"))
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -179,7 +179,7 @@ class AttendanceActivity(HorillaModel):
         return f"{self.employee_id} - {self.attendance_date} - {self.clock_in} - {self.clock_out}"
 
 
-class BatchAttendance(HorillaModel):
+class BatchAttendance(StafflaneModel):
     """
     Batch attendance model
     """
@@ -190,7 +190,7 @@ class BatchAttendance(HorillaModel):
         return f"{self.title}-{self.id}"
 
 
-class Attendance(HorillaModel):
+class Attendance(StafflaneModel):
     """
     Attendance model
     """
@@ -304,13 +304,13 @@ class Attendance(HorillaModel):
         verbose_name=_("Approved By"),
         editable=False,
     )
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
-    history = HorillaAuditLog(
+    history = StafflaneAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            StafflaneAuditInfo,
         ],
     )
 
@@ -951,11 +951,11 @@ class Attendance(HorillaModel):
                 )
 
 
-class AttendanceRequestFile(HorillaModel):
+class AttendanceRequestFile(StafflaneModel):
     file = models.FileField(upload_to=upload_path)
 
 
-class AttendanceRequestComment(HorillaModel):
+class AttendanceRequestComment(StafflaneModel):
     """
     AttendanceRequestComment Model
     """
@@ -969,7 +969,7 @@ class AttendanceRequestComment(HorillaModel):
         return f"{self.comment}"
 
 
-class AttendanceOverTime(HorillaModel):
+class AttendanceOverTime(StafflaneModel):
     """
     AttendanceOverTime model
     """
@@ -1026,7 +1026,7 @@ class AttendanceOverTime(HorillaModel):
         null=True,
         verbose_name=_("Overtime Seconds"),
     )
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -1229,7 +1229,7 @@ class AttendanceOverTime(HorillaModel):
         super().save(*args, **kwargs)
 
 
-class AttendanceLateComeEarlyOut(HorillaModel):
+class AttendanceLateComeEarlyOut(StafflaneModel):
     """
     AttendanceLateComeEarlyOut model
     """
@@ -1254,7 +1254,7 @@ class AttendanceLateComeEarlyOut(HorillaModel):
         editable=False,
     )
     type = models.CharField(max_length=20, choices=choices, verbose_name=_("Type"))
-    objects = HorillaCompanyManager(
+    objects = StafflaneCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -1348,7 +1348,7 @@ class AttendanceLateComeEarlyOut(HorillaModel):
             {self.attendance_id.employee_id.employee_last_name} - {self.type}"
 
 
-class AttendanceValidationCondition(HorillaModel):
+class AttendanceValidationCondition(StafflaneModel):
     """
     AttendanceValidationCondition model
     """
@@ -1368,7 +1368,7 @@ class AttendanceValidationCondition(HorillaModel):
         default=False, verbose_name=_("Auto Approve OT")
     )
     company_id = models.ManyToManyField(Company, blank=True, verbose_name=_("Company"))
-    objects = HorillaCompanyManager()
+    objects = StafflaneCompanyManager()
 
     def clean(self):
         """
@@ -1390,7 +1390,7 @@ class AttendanceValidationCondition(HorillaModel):
         )
 
 
-class GraceTime(HorillaModel):
+class GraceTime(StafflaneModel):
     """
     Model for saving Grace time
     """
@@ -1415,7 +1415,7 @@ class GraceTime(HorillaModel):
     is_default = models.BooleanField(default=False)
 
     company_id = models.ManyToManyField(Company, blank=True, verbose_name=_("Company"))
-    objects = HorillaCompanyManager()
+    objects = StafflaneCompanyManager()
 
     def __str__(self) -> str:
         return str(f"{self.allowed_time} - Hours")
@@ -1531,7 +1531,7 @@ class GraceTime(HorillaModel):
         super().save(*args, **kwargs)
 
 
-class AttendanceGeneralSetting(HorillaModel):
+class AttendanceGeneralSetting(StafflaneModel):
     """
     AttendanceGeneralSettings
     """
@@ -1545,7 +1545,7 @@ class AttendanceGeneralSetting(HorillaModel):
         ),
     )
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
-    objects = HorillaCompanyManager()
+    objects = StafflaneCompanyManager()
 
     def company_col(self):
         if self.company_id:
@@ -1623,7 +1623,7 @@ class WorkRecords(models.Model):
     )
     day_percentage = models.FloatField(default=0)
     last_update = models.DateTimeField(null=True, blank=True)
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = StafflaneCompanyManager("employee_id__employee_work_info__company_id")
 
     def title_message(self):
         title_message = self.message

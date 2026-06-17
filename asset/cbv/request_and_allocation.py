@@ -25,19 +25,19 @@ from asset.forms import AssetAllocationForm, AssetReassignForm, AssetRequestForm
 from asset.models import Asset, AssetAssignment, AssetRequest, ReturnImages
 from base.methods import filtersubordinates
 from employee.models import Employee
-from horilla.horilla_middlewares import _thread_locals
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import (
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import (
     login_required,
     owner_can_enter,
     permission_required,
 )
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
-    HorillaTabView,
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneTabView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -53,7 +53,7 @@ class RequestAndAllocationView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AllocationList(HorillaListView):
+class AllocationList(StafflaneListView):
     """
     For both  asset allocation and asset tab
     """
@@ -167,7 +167,7 @@ class AssetAllocationList(AllocationList):
 
 
 @method_decorator(login_required, name="dispatch")
-class AssetRequestList(HorillaListView):
+class AssetRequestList(StafflaneListView):
     """
     Asset Request Tab
     """
@@ -245,7 +245,7 @@ class AssetAllocationDelete(DeleteView):
         self.object.delete()
         messages.success(request, _("Allocation deleted successfully"))
 
-        return HorillaFormView.HttpResponse()
+        return StafflaneFormView.HttpResponse()
 
 
 @method_decorator(login_required, name="dispatch")
@@ -265,11 +265,11 @@ class AssetRequestDelete(DeleteView):
         self.object.delete()
         messages.success(request, _("Asset request deleted successfully"))
 
-        return HorillaFormView.HttpResponse()
+        return StafflaneFormView.HttpResponse()
 
 
 @method_decorator(login_required, name="dispatch")
-class RequestAndAllocationTab(HorillaTabView):
+class RequestAndAllocationTab(StafflaneTabView):
     """
     Tab View
     """
@@ -347,7 +347,7 @@ class RequestAndAllocationTab(HorillaTabView):
 
 
 @method_decorator(login_required, name="dispatch")
-class RequestAndAllocationNav(HorillaNavView):
+class RequestAndAllocationNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -393,7 +393,7 @@ class RequestAndAllocationNav(HorillaNavView):
     ),
     name="dispatch",
 )
-class AssetDetailView(HorillaDetailedView):
+class AssetDetailView(StafflaneDetailedView):
     """
     detail view of asset tab
     """
@@ -431,7 +431,7 @@ class AssetDetailView(HorillaDetailedView):
     ),
     name="dispatch",
 )
-class AssetRequestDetailView(HorillaDetailedView):
+class AssetRequestDetailView(StafflaneDetailedView):
     """
     detail view of asset request tab
     """
@@ -468,7 +468,7 @@ class AssetRequestDetailView(HorillaDetailedView):
     ),
     name="dispatch",
 )
-class AssetAllocationDetailView(HorillaDetailedView):
+class AssetAllocationDetailView(StafflaneDetailedView):
     """
     detail view of asset allocation tab
     """
@@ -500,7 +500,7 @@ class AssetAllocationDetailView(HorillaDetailedView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AssetRequestCreateForm(HorillaFormView):
+class AssetRequestCreateForm(StafflaneFormView):
     """
     Create Asset request
     """
@@ -520,7 +520,7 @@ class AssetRequestCreateForm(HorillaFormView):
                 has_perm = request.user.has_perm("asset.change_assetrequest")
                 if not (is_owner or has_perm):
                     messages.error(request, _("You don't have permission."))
-                    return HorillaRedirect(request)
+                    return StafflaneRedirect(request)
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -550,7 +550,7 @@ class AssetRequestCreateForm(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="asset.add_asset"), name="dispatch")
-class AssetAllocationFormView(HorillaFormView):
+class AssetAllocationFormView(StafflaneFormView):
     """
     Create Asset Allocation
     """
@@ -600,7 +600,7 @@ class AssetAllocationFormView(HorillaFormView):
 @method_decorator(
     permission_required(perm="asset.add_assetassignment"), name="dispatch"
 )
-class AssetApproveFormView(HorillaFormView):
+class AssetApproveFormView(StafflaneFormView):
     """
     Create Asset Allocation
     """
@@ -694,7 +694,7 @@ class AssetRenewalView(TemplateView):
 @method_decorator(
     permission_required(perm="asset.change_assetassignment"), name="dispatch"
 )
-class AssetRenewalNav(HorillaNavView):
+class AssetRenewalNav(StafflaneNavView):
     """
     Nav bar for the asset renewal page.
     """
@@ -714,7 +714,7 @@ class AssetRenewalNav(HorillaNavView):
 @method_decorator(
     permission_required(perm="asset.change_assetassignment"), name="dispatch"
 )
-class ExpiringAssignmentList(HorillaListView):
+class ExpiringAssignmentList(StafflaneListView):
     """
     Lists active assignments whose asset expires within 30 days (or is already expired).
     """
@@ -758,7 +758,7 @@ class ExpiringAssignmentList(HorillaListView):
 @method_decorator(
     permission_required(perm="asset.change_assetassignment"), name="dispatch"
 )
-class AssetReassignFormView(HorillaFormView):
+class AssetReassignFormView(StafflaneFormView):
     """
     Modal form to swap the asset on an existing assignment to a replacement.
     """

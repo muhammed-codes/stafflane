@@ -10,14 +10,14 @@ from django.utils.translation import gettext_lazy as _
 
 from employee.cbv.employee_profile import EmployeeProfileView
 from employee.models import Employee
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
-    HorillaTabView,
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneTabView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -51,7 +51,7 @@ class ObjectiveTemplateView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class ObjectivesList(HorillaListView):
+class ObjectivesList(StafflaneListView):
     """
     List view of the page
     """
@@ -190,7 +190,7 @@ class ObjectiveTemplateList(AllObjectives):
 
 
 @method_decorator(login_required, name="dispatch")
-class ObjectivesTab(HorillaTabView):
+class ObjectivesTab(StafflaneTabView):
     """
     Tab View
     """
@@ -281,7 +281,7 @@ class ObjectivesTab(HorillaTabView):
 
 
 @method_decorator(login_required, name="dispatch")
-class ObjectivesNav(HorillaNavView):
+class ObjectivesNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -329,7 +329,7 @@ class DynamicKeyResultCreateForm(KeyResultFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class CreateEmployeeObjectiveForm(HorillaFormView):
+class CreateEmployeeObjectiveForm(StafflaneFormView):
     """
     form view for create employee objective
     """
@@ -383,7 +383,7 @@ class CreateEmployeeObjectiveForm(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class CreateObjectiveFormView(HorillaFormView):
+class CreateObjectiveFormView(StafflaneFormView):
     """
     form view for create objectives
     """
@@ -521,7 +521,7 @@ class CreateTemplateObjectiveFormView(CreateObjectiveFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AddAssigneesFormView(HorillaFormView):
+class AddAssigneesFormView(StafflaneFormView):
     """
     form view for add assignees
     """
@@ -540,12 +540,12 @@ class AddAssigneesFormView(HorillaFormView):
         obj_id = kwargs.get("pk")
 
         if not obj_id:
-            return HorillaRedirect(request, message=_("Objective ID is missing"))
+            return StafflaneRedirect(request, message=_("Objective ID is missing"))
 
         self.object = Objective.objects.filter(pk=obj_id).first()
 
         if not self.object:
-            return HorillaRedirect(request, message=_("Invalid Objective"))
+            return StafflaneRedirect(request, message=_("Invalid Objective"))
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -602,7 +602,7 @@ class AddAssigneesFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class CreateEmployeeKeyResultFormView(HorillaFormView):
+class CreateEmployeeKeyResultFormView(StafflaneFormView):
     """
     form view for create employee key result form
     """
@@ -649,7 +649,7 @@ class CreateEmployeeKeyResultFormView(HorillaFormView):
         ):
             return super().get(request, *args, pk=pk, **kwargs)
         messages.info(request, "You dont have permission")
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -713,7 +713,7 @@ class CreateEmployeeKeyResultFormView(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class EmployeeObjectiveDetailView(HorillaDetailedView):
+class EmployeeObjectiveDetailView(StafflaneDetailedView):
     """
     Generic Detail view of page
     """
@@ -750,7 +750,7 @@ EmployeeKeyResult.get_history_url = get_history_url
 
 
 @method_decorator(login_required, name="dispatch")
-class EmployeeObjectiveKeyResultDetailListView(HorillaListView):
+class EmployeeObjectiveKeyResultDetailListView(StafflaneListView):
     """
     List view of the page
     """
@@ -899,7 +899,7 @@ class EKRTab(EmployeeObjectiveKeyResultDetailListView):
     filter_selected = False
 
     def get_queryset(self, queryset=None, filtered=False, *args, **kwargs):
-        self.queryset = HorillaListView.get_queryset(
+        self.queryset = StafflaneListView.get_queryset(
             self, queryset, filtered, *args, **kwargs
         ).filter(employee_objective_id__employee_id__pk=self.kwargs["pk"])
         self._saved_filters = self._saved_filters.copy()

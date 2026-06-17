@@ -15,17 +15,17 @@ from base.forms import TagsForm
 from base.models import Tags
 from helpdesk.filter import TagsFilter
 from helpdesk.forms import TicketTypeForm
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="helpdesk.view_tag"), name="dispatch")
-class TagsListView(HorillaListView):
+class TagsListView(StafflaneListView):
     """
     list view for tickets in settings
     """
@@ -81,7 +81,7 @@ class TagsListView(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="helpdesk.view_tag"), name="dispatch")
-class TagsNavView(HorillaNavView):
+class TagsNavView(StafflaneNavView):
     """
     nav bar of the department view
     """
@@ -104,7 +104,7 @@ class TagsNavView(HorillaNavView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="helpdesk.add_tag"), name="dispatch")
-class TagsFormView(HorillaFormView):
+class TagsFormView(StafflaneFormView):
     """
     Form view for creating and updating Helpdesk Tags.
     """

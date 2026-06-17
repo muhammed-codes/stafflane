@@ -9,11 +9,11 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from base.models import HorillaMailTemplate
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaListView,
-    HorillaNavView,
+from base.models import StafflaneMailTemplate
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from recruitment.filters import CandidateFilter
@@ -37,7 +37,7 @@ class OnboardingCandidatesView(TemplateView):
             is_active=True,
             recruitment_id__closed=False,
         ).filter(Q(hired=True) | Q(stage_id__stage_type="hired"))
-        mail_templates = HorillaMailTemplate.objects.all()
+        mail_templates = StafflaneMailTemplate.objects.all()
         context["mail_templates"] = mail_templates
         context["hired_candidates"] = hired_candidates
         return context
@@ -47,7 +47,7 @@ class OnboardingCandidatesView(TemplateView):
 @method_decorator(
     permission_required(perm="recruitment.view_candidate"), name="dispatch"
 )
-class OnboardingCandidatesList(HorillaListView):
+class OnboardingCandidatesList(StafflaneListView):
     """
     List view
     """
@@ -170,7 +170,7 @@ class OnboardingCandidatesList(HorillaListView):
 @method_decorator(
     permission_required(perm="recruitment.view_candidate"), name="dispatch"
 )
-class OnboardingCandidatesNav(HorillaNavView):
+class OnboardingCandidatesNav(StafflaneNavView):
     """
     Nav bar
     """

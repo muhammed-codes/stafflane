@@ -13,16 +13,16 @@ from django.utils.translation import gettext_lazy as _
 from base.filters import HolidayFilter
 from base.forms import HolidayForm, HolidaysColumnExportForm
 from base.models import Holidays
-from horilla_views.cbv_methods import (
+from stafflane_views.cbv_methods import (
     hx_request_required,
     login_required,
     permission_required,
 )
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 
@@ -37,7 +37,7 @@ class HolidaysView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class HolidayListView(HorillaListView):
+class HolidayListView(StafflaneListView):
     """
     list view
     """
@@ -82,7 +82,7 @@ class HolidayListView(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class HolidayNavView(HorillaNavView):
+class HolidayNavView(StafflaneNavView):
     """
     nav bar
     """
@@ -135,7 +135,7 @@ class HolidayNavView(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class HolidayDetailView(HorillaDetailedView):
+class HolidayDetailView(StafflaneDetailedView):
     """
     detail view of the page
     """
@@ -179,7 +179,7 @@ class HolidayExport(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class HolidayFormView(HorillaFormView):
+class HolidayFormView(StafflaneFormView):
     """
     form view for create button
     """

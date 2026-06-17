@@ -12,7 +12,7 @@ from django_filters import CharFilter, DateFilter
 
 from base.models import Tags
 from helpdesk.models import FAQ, DepartmentManager, FAQCategory, Ticket, TicketType
-from horilla.filters import FilterSet, HorillaFilterSet
+from stafflane.filters import FilterSet, StafflaneFilterSet
 
 
 class FAQFilter(FilterSet):
@@ -158,7 +158,7 @@ class TagsFilter(FilterSet):
         ]
 
 
-class DepartmentManagerFilter(HorillaFilterSet):
+class DepartmentManagerFilter(StafflaneFilterSet):
 
     search = django_filters.CharFilter(method="search_method")
     search_field = django_filters.CharFilter(method="search_in")

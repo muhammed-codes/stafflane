@@ -21,9 +21,9 @@ from employee.models import (
     EmployeeWorkInformation,
     ProfileEditFeature,
 )
-from horilla.decorators import hx_request_required, login_required, permission_required
-from horilla.http.response import HorillaRedirect
-from horilla.methods import get_horilla_model_class
+from stafflane.decorators import hx_request_required, login_required, permission_required
+from stafflane.http.response import StafflaneRedirect
+from stafflane.methods import get_stafflane_model_class
 
 
 class AllCompany:
@@ -145,7 +145,7 @@ def update_selected_company(request):
         "id": company.id,
     }
     request.session["selected_company_instance"] = company
-    return HorillaRedirect(request)
+    return StafflaneRedirect(request)
 
 
 urlpatterns.append(
@@ -171,12 +171,12 @@ def white_labelling_company(request):
             company = hq
 
         return {
-            "white_label_company_name": company.company if company else "Horilla",
+            "white_label_company_name": company.company if company else "Stafflane",
             "white_label_company": company,
         }
     else:
         return {
-            "white_label_company_name": "Horilla",
+            "white_label_company_name": "Stafflane",
             "white_label_company": None,
         }
 
@@ -189,7 +189,7 @@ def resignation_request_enabled(request):
     enabled_resignation_request = False
     first = None
     if apps.is_installed("offboarding"):
-        OffboardingGeneralSetting = get_horilla_model_class(
+        OffboardingGeneralSetting = get_stafflane_model_class(
             app_label="offboarding", model="offboardinggeneralsetting"
         )
         if selected_company and selected_company != "all":
@@ -210,7 +210,7 @@ def timerunner_enabled(request):
     first = None
     enabled_timerunner = True
     if apps.is_installed("attendance"):
-        AttendanceGeneralSetting = get_horilla_model_class(
+        AttendanceGeneralSetting = get_stafflane_model_class(
             app_label="attendance", model="attendancegeneralsetting"
         )
         first = AttendanceGeneralSetting.objects.first()
@@ -226,7 +226,7 @@ def intial_notice_period(request):
     initial = 30
     first = None
     if apps.is_installed("payroll"):
-        PayrollGeneralSetting = get_horilla_model_class(
+        PayrollGeneralSetting = get_stafflane_model_class(
             app_label="payroll", model="payrollgeneralsetting"
         )
         first = PayrollGeneralSetting.objects.first()
@@ -242,7 +242,7 @@ def check_candidate_self_tracking(request):
 
     candidate_self_tracking = False
     if apps.is_installed("recruitment"):
-        RecruitmentGeneralSetting = get_horilla_model_class(
+        RecruitmentGeneralSetting = get_stafflane_model_class(
             app_label="recruitment", model="recruitmentgeneralsetting"
         )
         first = RecruitmentGeneralSetting.objects.first()
@@ -259,7 +259,7 @@ def check_candidate_self_tracking_rating(request):
     """
     rating_option = False
     if apps.is_installed("recruitment"):
-        RecruitmentGeneralSetting = get_horilla_model_class(
+        RecruitmentGeneralSetting = get_stafflane_model_class(
             app_label="recruitment", model="recruitmentgeneralsetting"
         )
         first = RecruitmentGeneralSetting.objects.first()

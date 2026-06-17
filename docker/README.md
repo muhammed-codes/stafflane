@@ -1,6 +1,6 @@
-# Horilla HRMS — Docker Deployment Guide
+# Stafflane HRMS — Docker Deployment Guide
 
-A complete, step-by-step guide to running Horilla HR using Docker. Covers development setup, production deployment, customization, troubleshooting, and maintenance.
+A complete, step-by-step guide to running Stafflane HR using Docker. Covers development setup, production deployment, customization, troubleshooting, and maintenance.
 
 ---
 
@@ -56,12 +56,12 @@ A complete, step-by-step guide to running Horilla HR using Docker. Covers develo
 
 ## 2. Quick Start (Development)
 
-Get Horilla running in under 5 minutes:
+Get Stafflane running in under 5 minutes:
 
 ```bash
 # 1. Clone the repository
-git clone -b dev/v2.0 https://github.com/horilla-opensource/horilla.git
-cd horilla
+git clone -b dev/v2.0 https://github.com/stafflane-opensource/stafflane.git
+cd stafflane
 
 # 2. Start all services
 make dev
@@ -74,7 +74,7 @@ make status
 open http://localhost:8000
 ```
 
-On first launch, Horilla will:
+On first launch, Stafflane will:
 1. Wait for PostgreSQL to be ready (30s timeout)
 2. Run database migrations automatically
 3. Collect static files
@@ -179,9 +179,9 @@ make logs
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `POSTGRES_DB` | `horilla_db` | Database name |
-| `POSTGRES_USER` | `horilla_user` | Database user |
-| `POSTGRES_PASSWORD` | `horilla_pass` | Database password — **change for production** |
+| `POSTGRES_DB` | `stafflane_db` | Database name |
+| `POSTGRES_USER` | `stafflane_user` | Database user |
+| `POSTGRES_PASSWORD` | `stafflane_pass` | Database password — **change for production** |
 
 #### Server Settings
 
@@ -212,7 +212,7 @@ The development setup mounts your local code into the container (`.:/app`), so c
 
 ```bash
 # Option 1: Set environment variable
-docker compose exec web env GUNICORN_RELOAD=true gunicorn horilla.wsgi:application --config docker/gunicorn.conf.py
+docker compose exec web env GUNICORN_RELOAD=true gunicorn stafflane.wsgi:application --config docker/gunicorn.conf.py
 
 # Option 2: Use Django's development server instead
 docker compose exec web python manage.py runserver 0.0.0.0:8000
@@ -258,7 +258,7 @@ docker compose exec web python manage.py test
 make db-shell
 
 # Redis CLI
-docker compose exec redis redis-cli -a horilla_pass
+docker compose exec redis redis-cli -a stafflane_pass
 ```
 
 ### Viewing Logs
@@ -298,7 +298,7 @@ python3 -c "from django.core.management.utils import get_random_secret_key; prin
 
 ### Step 2: Update Passwords
 
-Change `horilla_pass` in all locations:
+Change `stafflane_pass` in all locations:
 - `web` service: `DATABASE_URL`, `REDIS_URL`
 - `db` service: `POSTGRES_PASSWORD`
 - `redis` service: `command` (--requirepass) and healthcheck (-a)
@@ -404,7 +404,7 @@ make db-shell
 
 ### Loading Demo Data
 
-From the Horilla login page, click "Load Demo Data" to populate the system with sample employees, departments, and other test data.
+From the Stafflane login page, click "Load Demo Data" to populate the system with sample employees, departments, and other test data.
 
 ---
 
@@ -433,21 +433,21 @@ docker cp $(docker compose ps -q web):/app/media ./media-backup
 
 ### Using Cloud Storage (S3/GCP)
 
-Horilla supports AWS S3 and Google Cloud Storage. Add to your environment:
+Stafflane supports AWS S3 and Google Cloud Storage. Add to your environment:
 
 **AWS S3:**
 ```
 AWS_ACCESS_KEY_ID=your-key
 AWS_SECRET_ACCESS_KEY=your-secret
 AWS_STORAGE_BUCKET_NAME=your-bucket
-DEFAULT_FILE_STORAGE=horilla.horilla_backends.PrivateMediaStorage
+DEFAULT_FILE_STORAGE=stafflane.stafflane_backends.PrivateMediaStorage
 ```
 
 **Google Cloud Storage:**
 ```
 GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-credentials.json
 GS_BUCKET_NAME=your-bucket
-DEFAULT_FILE_STORAGE=horilla.horilla_backends_gcp.PrivateMediaStorage
+DEFAULT_FILE_STORAGE=stafflane.stafflane_backends_gcp.PrivateMediaStorage
 ```
 
 ---
@@ -496,7 +496,7 @@ Add a memory limit to prevent Redis from consuming all available RAM:
 
 ```yaml
 redis:
-  command: redis-server --appendonly yes --requirepass horilla_pass --maxmemory 256mb --maxmemory-policy allkeys-lru
+  command: redis-server --appendonly yes --requirepass stafflane_pass --maxmemory 256mb --maxmemory-policy allkeys-lru
 ```
 
 ---
@@ -507,30 +507,30 @@ redis:
 
 ```bash
 # SQL backup
-docker compose exec db pg_dump -U horilla_user horilla_db > backup_$(date +%Y%m%d_%H%M%S).sql
+docker compose exec db pg_dump -U stafflane_user stafflane_db > backup_$(date +%Y%m%d_%H%M%S).sql
 
 # Compressed backup
-docker compose exec db pg_dump -U horilla_user -F c horilla_db > backup_$(date +%Y%m%d).dump
+docker compose exec db pg_dump -U stafflane_user -F c stafflane_db > backup_$(date +%Y%m%d).dump
 ```
 
 ### Database Restore
 
 ```bash
 # From SQL file
-cat backup.sql | docker compose exec -T db psql -U horilla_user -d horilla_db
+cat backup.sql | docker compose exec -T db psql -U stafflane_user -d stafflane_db
 
 # From compressed dump
-docker compose exec -T db pg_restore -U horilla_user -d horilla_db --clean < backup.dump
+docker compose exec -T db pg_restore -U stafflane_user -d stafflane_db --clean < backup.dump
 ```
 
 ### Media Backup
 
 ```bash
 # Backup media volume
-docker run --rm -v horilla_media:/data -v $(pwd):/backup alpine tar czf /backup/media_backup.tar.gz -C /data .
+docker run --rm -v stafflane_media:/data -v $(pwd):/backup alpine tar czf /backup/media_backup.tar.gz -C /data .
 
 # Restore media volume
-docker run --rm -v horilla_media:/data -v $(pwd):/backup alpine tar xzf /backup/media_backup.tar.gz -C /data
+docker run --rm -v stafflane_media:/data -v $(pwd):/backup alpine tar xzf /backup/media_backup.tar.gz -C /data
 ```
 
 ---
@@ -633,8 +633,8 @@ docker system df -v
 #### Slow performance
 
 1. Check worker count: `docker compose exec web ps aux | grep gunicorn`
-2. Check database connections: `docker compose exec db psql -U horilla_user -c "SELECT count(*) FROM pg_stat_activity;"`
-3. Check Redis memory: `docker compose exec redis redis-cli -a horilla_pass INFO memory`
+2. Check database connections: `docker compose exec db psql -U stafflane_user -c "SELECT count(*) FROM pg_stat_activity;"`
+3. Check Redis memory: `docker compose exec redis redis-cli -a stafflane_pass INFO memory`
 
 ### Resetting Everything
 
@@ -658,7 +658,7 @@ Before going to production, verify the following:
 - [ ] `ALLOWED_HOSTS` lists only your actual domain(s)
 - [ ] `CSRF_TRUSTED_ORIGINS` uses `https://` URLs
 - [ ] `DB_INIT_PASSWORD` is strong and unique
-- [ ] Database password is strong and unique (not `horilla_pass`)
+- [ ] Database password is strong and unique (not `stafflane_pass`)
 - [ ] Redis password is strong and unique
 - [ ] SSL/TLS is configured (HTTPS)
 - [ ] Database and Redis ports are NOT exposed to the host

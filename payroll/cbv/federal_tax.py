@@ -14,16 +14,16 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from base.models import Holidays
-from horilla_views.cbv_methods import (
+from stafflane_views.cbv_methods import (
     hx_request_required,
     login_required,
     permission_required,
 )
-from horilla_views.generic.cbv.pipeline import Pipeline
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.generic.cbv.pipeline import Pipeline
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 from payroll.filters import FilingStatusFilter, TaxBracketFilter
 from payroll.forms.tax_forms import FilingStatusForm, TaxBracketForm
@@ -33,7 +33,7 @@ from payroll.models.tax_models import TaxBracket
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.add_filingstatus"), name="dispatch")
-class FederalTaxFormView(HorillaFormView):
+class FederalTaxFormView(StafflaneFormView):
     """
     form view for create button
     """
@@ -65,7 +65,7 @@ class FederalTaxFormView(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.add_taxbracket"), name="dispatch")
-class TaxBracketCreateForm(HorillaFormView):
+class TaxBracketCreateForm(StafflaneFormView):
     """
     from view for create and edit tax brackets
     """
@@ -117,7 +117,7 @@ class TaxBracketCreateForm(HorillaFormView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.view_taxbracket"), name="dispatch")
-class TaxBracketNavView(HorillaNavView):
+class TaxBracketNavView(StafflaneNavView):
     """
     Nav view for tax bracket list
     """
@@ -196,7 +196,7 @@ class FilingStatusPipeline(Pipeline):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("payroll.view_taxbracket"), name="dispatch")
-class TaxBracketListView(HorillaListView):
+class TaxBracketListView(StafflaneListView):
     """
     List view for tax brackets
     """

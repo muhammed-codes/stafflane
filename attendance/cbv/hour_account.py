@@ -16,12 +16,12 @@ from attendance.forms import AttendanceOverTimeExportForm, AttendanceOverTimeFor
 from attendance.models import AttendanceOverTime
 from base.decorators import manager_can_enter
 from base.methods import choosesubordinates, filtersubordinates, is_reportingmanager
-from horilla_views.cbv_methods import hx_request_required, login_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import hx_request_required, login_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 
@@ -36,7 +36,7 @@ class HourAccount(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class HourAccountList(HorillaListView):
+class HourAccountList(StafflaneListView):
     """
     List view
     """
@@ -103,7 +103,7 @@ class HourAccountList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class HourAccountNav(HorillaNavView):
+class HourAccountNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -202,7 +202,7 @@ class HourExportView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class HourAccountDetailView(HorillaDetailedView):
+class HourAccountDetailView(StafflaneDetailedView):
     """
     Detail View
     """
@@ -231,7 +231,7 @@ class HourAccountDetailView(HorillaDetailedView):
 @method_decorator(
     manager_can_enter("attendance.add_attendanceovertime"), name="dispatch"
 )
-class HourAccountFormView(HorillaFormView):
+class HourAccountFormView(StafflaneFormView):
     """
     Form View
     """

@@ -25,7 +25,7 @@ from django.utils.translation import gettext as _
 
 from base.models import Company, CompanyLeaves, DynamicPagination, Holidays
 from employee.models import Employee, EmployeeWorkInformation
-from horilla.horilla_middlewares import _thread_locals
+from stafflane.stafflane_middlewares import _thread_locals
 
 CHART_CONFIG = {
     "offline_employees": {
@@ -835,7 +835,7 @@ def format_export_value(value, employee):
         check_in_time = datetime.strptime(str(value).split(".")[0], "%H:%M:%S").time()
 
         # Print the formatted time for each format
-        for format_name, format_string in settings.HORILLA_TIME_FORMATS.items():
+        for format_name, format_string in settings.STAFFLANE_TIME_FORMATS.items():
             if format_name == time_format:
                 value = check_in_time.strftime(format_string)
 
@@ -843,7 +843,7 @@ def format_export_value(value, employee):
         # Convert the string to a datetime.date object
         start_date = datetime.strptime(str(value), "%Y-%m-%d").date()
         # Print the formatted date for each format
-        for format_name, format_string in settings.HORILLA_DATE_FORMATS.items():
+        for format_name, format_string in settings.STAFFLANE_DATE_FORMATS.items():
             if format_name == date_format:
                 value = start_date.strftime(format_string)
 
@@ -1106,7 +1106,7 @@ def generate_pdf(template_path, context, path=True, title=None, html=True):
 
 
 def get_pagination():
-    from horilla.horilla_middlewares import _thread_locals
+    from stafflane.stafflane_middlewares import _thread_locals
 
     request = getattr(_thread_locals, "request", None)
     user = request.user
@@ -1329,7 +1329,7 @@ def get_subordinates(request):
 def format_date(date_str):
     # List of possible date formats to try
 
-    for format_name, format_string in settings.HORILLA_DATE_FORMATS.items():
+    for format_name, format_string in settings.STAFFLANE_DATE_FORMATS.items():
         try:
             return datetime.strptime(date_str, format_string).strftime("%Y-%m-%d")
         except ValueError:

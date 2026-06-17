@@ -1,7 +1,7 @@
 from django.contrib import messages
 
-from horilla.horilla_middlewares import _thread_locals
-from horilla.http import HorillaRedirect
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.http import StafflaneRedirect
 from project.methods import (
     any_project_manager,
     any_project_member,
@@ -39,6 +39,6 @@ def is_projectmanager_or_member_or_perms(function, perm):
         ):
             return function(self, *args, **kwargs)
         messages.info(request, "You don't have permission.")
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)
 
     return _function

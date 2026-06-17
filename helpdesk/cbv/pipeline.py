@@ -7,19 +7,19 @@ from django.utils.translation import gettext_lazy as _
 from base.methods import filtersubordinates, is_reportingmanager
 from helpdesk.filter import TicketFilter, TicketReGroup
 from helpdesk.models import TICKET_STATUS, Ticket
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.kanban import HorillaKanbanView
-from horilla_views.generic.cbv.pipeline import Pipeline
-from horilla_views.generic.cbv.views import (
-    HorillaListView,
-    HorillaNavView,
-    HorillaSectionView,
-    HorillaTabView,
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.kanban import StafflaneKanbanView
+from stafflane_views.generic.cbv.pipeline import Pipeline
+from stafflane_views.generic.cbv.views import (
+    StafflaneListView,
+    StafflaneNavView,
+    StafflaneSectionView,
+    StafflaneTabView,
 )
 
 
 @method_decorator(login_required, name="dispatch")
-class TicketPipelineView(HorillaSectionView):
+class TicketPipelineView(StafflaneSectionView):
     """
     Offboarding Pipeline View
     """
@@ -32,7 +32,7 @@ class TicketPipelineView(HorillaSectionView):
 
 
 @method_decorator(login_required, name="dispatch")
-class TicketPipelineNav(HorillaNavView):
+class TicketPipelineNav(StafflaneNavView):
     """
     Offboarding Pipeline Navigation View
     """
@@ -115,7 +115,7 @@ class TicketPipelineNav(HorillaNavView):
 
 
 @method_decorator(login_required, name="dispatch")
-class TicketTabView(HorillaTabView):
+class TicketTabView(StafflaneTabView):
     """
     Pipeline List View
     """
@@ -191,7 +191,7 @@ class TicketTabView(HorillaTabView):
 
 
 @method_decorator(login_required, name="dispatch")
-class TicketListView(HorillaListView):
+class TicketListView(StafflaneListView):
     """
     Pipeline List View
     """
@@ -363,7 +363,7 @@ class TicketListView(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class TicketCardView(HorillaKanbanView):
+class TicketCardView(StafflaneKanbanView):
     model = Ticket
     filter_class = TicketFilter
     group_key = "status"

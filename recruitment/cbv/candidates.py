@@ -26,24 +26,24 @@ from openpyxl.utils import get_column_letter
 from xhtml2pdf import pisa
 
 from employee.forms import BulkUpdateFieldForm
-from horilla.horilla_middlewares import _thread_locals
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import (
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import (
     export_xlsx,
     hx_request_required,
     login_required,
     permission_required,
 )
-from horilla_views.forms import DynamicBulkUpdateForm
-from horilla_views.generic.cbv.views import (
-    HorillaCardView,
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.forms import DynamicBulkUpdateForm
+from stafflane_views.generic.cbv.views import (
+    StafflaneCardView,
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
-from horilla_views.templatetags.generic_template_filters import getattribute
+from stafflane_views.templatetags.generic_template_filters import getattribute
 from recruitment.cbv.candidate_reject_reason import DynamicRejectReasonFormView
 from recruitment.cbv_decorators import all_manager_can_enter, manager_can_enter
 from recruitment.filters import CandidateFilter
@@ -93,7 +93,7 @@ class CandidatesView(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter(perm="recruitment.view_candidate"), name="dispatch")
-class ListCandidates(HorillaListView):
+class ListCandidates(StafflaneListView):
     """
     List view of candidates
     """
@@ -324,7 +324,7 @@ class ListCandidates(HorillaListView):
 
         _model = self.model
 
-        class HorillaListViewResorce(resources.ModelResource):
+        class StafflaneListViewResorce(resources.ModelResource):
             """
             Instant Resource class
             """
@@ -424,7 +424,7 @@ class ListCandidates(HorillaListView):
                 cleaned_text = "\n".join(non_blank_lines)
                 return cleaned_text
 
-        book_resource = HorillaListViewResorce()
+        book_resource = StafflaneListViewResorce()
 
         # Export the data using the resource
         dataset = book_resource.export(queryset)
@@ -549,7 +549,7 @@ class ListCandidates(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter(perm="recruitment.view_candidate"), name="dispatch")
-class CardCandidates(HorillaCardView):
+class CardCandidates(StafflaneCardView):
     """
     For card view
     """
@@ -711,7 +711,7 @@ class CardCandidates(HorillaCardView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(manager_can_enter(perm="recruitment.view_candidate"), name="dispatch")
-class CandidateNav(HorillaNavView):
+class CandidateNav(StafflaneNavView):
     """
     For nav bar
     """
@@ -875,7 +875,7 @@ class AddToRejectedCandidatesView(View):
         if form.is_valid():
             form.save()
             messages.success(request, _("Candidate reject reason saved"))
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
         return render(request, self.template_name, {"form": form})
 
 
@@ -883,7 +883,7 @@ class AddToRejectedCandidatesView(View):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.view_candidate"), name="dispatch"
 )
-class CandidateDetail(HorillaDetailedView):
+class CandidateDetail(StafflaneDetailedView):
     """
     Candidate detail
     """
@@ -917,7 +917,7 @@ class CandidateDetail(HorillaDetailedView):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.change_candidate"), name="dispatch"
 )
-class ToSkillZoneFormView(HorillaFormView):
+class ToSkillZoneFormView(StafflaneFormView):
     """
     Form View
     """
@@ -991,7 +991,7 @@ class ToSkillZoneFormView(HorillaFormView):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.change_candidate"), name="dispatch"
 )
-class RejectReasonFormView(HorillaFormView):
+class RejectReasonFormView(StafflaneFormView):
     """
     Form View
     """

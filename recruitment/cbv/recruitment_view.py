@@ -12,12 +12,12 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from base.models import IntegrationApps
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from recruitment.filters import RecruitmentFilter
@@ -42,7 +42,7 @@ class RecruitmentView(TemplateView):
 @method_decorator(
     permission_required(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class RecruitmentList(HorillaListView):
+class RecruitmentList(StafflaneListView):
     """
     List view of recruitment
     """
@@ -131,7 +131,7 @@ class RecruitmentList(HorillaListView):
 @method_decorator(
     permission_required(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class RecruitmentNav(HorillaNavView):
+class RecruitmentNav(StafflaneNavView):
     """
     For nav bar
     """
@@ -220,7 +220,7 @@ class RecruitmentCreationFormExtended(RecruitmentCreationForm):
 
 
 @method_decorator(login_required, name="dispatch")
-class RecruitmentNewSkillForm(HorillaFormView):
+class RecruitmentNewSkillForm(StafflaneFormView):
     """
     form view for add new skill
     """
@@ -243,7 +243,7 @@ class RecruitmentNewSkillForm(HorillaFormView):
 @method_decorator(
     permission_required(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class RecruitmentForm(HorillaFormView):
+class RecruitmentForm(StafflaneFormView):
     """
     Form View
     """
@@ -306,7 +306,7 @@ class RecruitmentForm(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AddCandidateFormView(HorillaFormView):
+class AddCandidateFormView(StafflaneFormView):
     """
     form view for add candidate
     """
@@ -336,7 +336,7 @@ class AddCandidateFormView(HorillaFormView):
 @method_decorator(
     permission_required(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class RecruitmentFormDuplicate(HorillaFormView):
+class RecruitmentFormDuplicate(StafflaneFormView):
     """
     Duplicate form view
     """
@@ -388,7 +388,7 @@ class RecruitmentFormDuplicate(HorillaFormView):
 @method_decorator(
     permission_required(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class RecruitmentDetailView(HorillaDetailedView):
+class RecruitmentDetailView(StafflaneDetailedView):
     """
     detail view of page
     """

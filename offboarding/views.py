@@ -15,19 +15,19 @@ from base.methods import closest_numbers, eval_validate, paginator_qry, sortby
 from base.models import Department, JobPosition
 from base.views import general_settings
 from employee.models import Employee
-from horilla import horilla_middlewares
-from horilla.decorators import (
+from stafflane import stafflane_middlewares
+from stafflane.decorators import (
     hx_request_required,
     login_required,
     manager_can_enter,
     owner_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset as group_by
-from horilla.http.response import HorillaRedirect
-from horilla.methods import get_horilla_model_class
-from horilla_auth.models import HorillaUser
-from horilla_views.generic.cbv.views import HorillaFormView
+from stafflane.group_by import group_by_queryset as group_by
+from stafflane.http.response import StafflaneRedirect
+from stafflane.methods import get_stafflane_model_class
+from stafflane_auth.models import StafflaneUser
+from stafflane_views.generic.cbv.views import StafflaneFormView
 from notifications.signals import notify
 from offboarding.decorators import (
     any_manager_can_enter,
@@ -78,7 +78,7 @@ def any_manager(employee: Employee):
 
 def pipeline_grouper(filters={}, offboardings=[]):
     groups = []
-    request = getattr(horilla_middlewares._thread_locals, "request", None)
+    request = getattr(stafflane_middlewares._thread_locals, "request", None)
     for offboarding in offboardings:
         employees = []
         stages = PipelineStageFilter(
@@ -251,7 +251,7 @@ def create_offboarding(request):
                 redirect=reverse("offboarding-pipeline"),
             )
 
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
 
     return render(
         request,
@@ -311,7 +311,7 @@ def create_stage(request):
                 icon="people-circle",
                 redirect=reverse("offboarding-pipeline"),
             )
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
 
     return render(request, "offboarding/stage/form.html", {"form": form})
 
@@ -324,7 +324,7 @@ def update_stage_order(request, pk):
     """
     offboarding = Offboarding.find(pk)
     if not offboarding:
-        return HorillaRedirect(request, message=_("Offboarding not found"))
+        return StafflaneRedirect(request, message=_("Offboarding not found"))
 
     if request.method == "POST":
         try:
@@ -392,7 +392,7 @@ def add_employee(request):
                     redirect=reverse("offboarding-pipeline"),
                     icon="information",
                 )
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
 
     return render(request, "offboarding/employee/form.html", {"form": form})
 
@@ -410,7 +410,7 @@ def delete_employee(request):
         messages.success(request, _("Offboarding employee deleted"))
         notify.send(
             request.user.employee_get,
-            recipient=HorillaUser.objects.filter(
+            recipient=StafflaneUser.objects.filter(
                 id__in=instances.values_list("employee_id__employee_user_id", flat=True)
             ),
             verb=f"You have been removed from the offboarding",
@@ -442,7 +442,7 @@ def delete_stage(request):
             messages.error(request, _("Stage not found"))
     except OverflowError:
         messages.error(request, _("Stage not found"))
-    return HorillaRedirect(request)
+    return StafflaneRedirect(request)
 
 
 @login_required
@@ -475,7 +475,7 @@ def change_stage(request):
     )
     notify.send(
         request.user.employee_get,
-        recipient=HorillaUser.objects.filter(
+        recipient=StafflaneUser.objects.filter(
             id__in=employees.values_list("employee_id__employee_user_id", flat=True)
         ),
         verb=f"Offboarding stage has been changed",
@@ -527,7 +527,7 @@ def change_offboarding_stage(request):
     )
     notify.send(
         request.user.employee_get,
-        recipient=HorillaUser.objects.filter(
+        recipient=StafflaneUser.objects.filter(
             id__in=employees.values_list("employee_id__employee_user_id", flat=True)
         ),
         verb=f"Offboarding stage has been changed",
@@ -542,7 +542,7 @@ def change_offboarding_stage(request):
     for item in groups:
         setattr(item["offboarding"], "stages", item["stages"])
 
-    return HorillaFormView.HttpResponse()
+    return StafflaneFormView.HttpResponse()
 
 
 @login_required
@@ -587,10 +587,10 @@ def add_note(request):
     """
     employee_id = request.GET.get("employee_id")
     if not employee_id:
-        return HorillaRedirect(request, message=_("Missing required parameter."))
+        return StafflaneRedirect(request, message=_("Missing required parameter."))
     employee = OffboardingEmployee.find(employee_id)
     if not employee:
-        return HorillaRedirect(request, message=_("Employee not found."))
+        return StafflaneRedirect(request, message=_("Employee not found."))
     form = NoteForm()
     if request.method == "POST":
         form = NoteForm(request.POST, request.FILES)
@@ -621,7 +621,7 @@ def offboarding_note_delete(request, note_id):
         note.delete()
         messages.success(request, _("The note has been successfully deleted."))
     except OffboardingNote.DoesNotExist:
-        return HorillaRedirect(request, message=_("Note not found."))
+        return StafflaneRedirect(request, message=_("Note not found."))
     return HttpResponse(script)
 
 
@@ -691,7 +691,7 @@ def update_task_status(request, *args, **kwargs):
     task_id = request.GET.get("task_id")
     status = request.GET.get("task_status")
     if not task_id or not status or not stage_id or not employee_ids:
-        return HorillaRedirect(request, message=_("Missing required parameters."))
+        return StafflaneRedirect(request, message=_("Missing required parameters."))
     employee_task = EmployeeTask.objects.filter(
         employee_id__id__in=employee_ids, task_id__id=task_id
     )
@@ -699,7 +699,7 @@ def update_task_status(request, *args, **kwargs):
     messages.success(request, _("Task status updated successfully..."))
     notify.send(
         request.user.employee_get,
-        recipient=HorillaUser.objects.filter(
+        recipient=StafflaneUser.objects.filter(
             id__in=employee_task.values_list(
                 "task_id__managers__employee_user_id", flat=True
             )
@@ -714,7 +714,7 @@ def update_task_status(request, *args, **kwargs):
     )
     stage = OffboardingStage.find(stage_id)
     if not stage:
-        return HorillaRedirect(request, message=_("Stage not found"))
+        return StafflaneRedirect(request, message=_("Stage not found"))
     stage_forms = {}
     stage_forms[str(stage.offboarding_id.id)] = StageSelectForm(
         offboarding=stage.offboarding_id
@@ -744,7 +744,7 @@ def task_assign(request):
     employees = OffboardingEmployee.objects.filter(id__in=employee_ids)
     task = OffboardingTask.find(task_id)
     if not task:
-        return HorillaRedirect(request, message=_("Task not found"))
+        return StafflaneRedirect(request, message=_("Task not found"))
     for employee in employees:
         try:
             assigned_task = EmployeeTask()
@@ -854,7 +854,7 @@ def request_view(request):
 def request_single_view(request, id):
     letter = ResignationLetter.find(id)
     if not letter:
-        return HorillaRedirect(request, message=_("Resignation letter not found"))
+        return StafflaneRedirect(request, message=_("Resignation letter not found"))
     context = {
         "letter": letter,
     }
@@ -949,7 +949,7 @@ def resignation_tab(request, pk):
 def resignation_list_swap_response(original_request):
     """
     Render the resignation list CBV fragment for hx-target=\"#listContainer\" swaps.
-    Subrequest keeps session (Horilla CACHE filters) without relying on client-side JS reload.
+    Subrequest keeps session (Stafflane CACHE filters) without relying on client-side JS reload.
     """
     from django.test import RequestFactory
 
@@ -1017,7 +1017,7 @@ def create_resignation_request(request):
         if form.is_valid():
             form.save()
             messages.success(request, _("Resignation letter saved"))
-            return HorillaRedirect(request)
+            return StafflaneRedirect(request)
 
     return render(request, "offboarding/resignation/form.html", {"form": form})
 
@@ -1034,7 +1034,7 @@ def update_status(request):
     employee_id = request.GET.get("employee_id")
     offboarding_id = request.GET.get("offboarding_id")
     contract_notice_end_date = (
-        get_horilla_model_class(app_label="payroll", model="contract")
+        get_stafflane_model_class(app_label="payroll", model="contract")
         .objects.filter(employee_id=employee_id, contract_status="active")
         .first()
         if apps.is_installed("payroll")
@@ -1150,7 +1150,7 @@ def get_notice_period(request):
     """
     employee_id = request.GET.get("employee_id")
     if apps.is_installed("payroll"):
-        Contract = get_horilla_model_class(app_label="payroll", model="contract")
+        Contract = get_stafflane_model_class(app_label="payroll", model="contract")
         employee_contract = (
             (
                 Contract.objects.order_by("-id")
@@ -1211,7 +1211,7 @@ def offboarding_dashboard(request):
 
     onboarding_employees = []
     if apps.is_installed("recruitment"):
-        Candidate = get_horilla_model_class("recruitment", "candidate")
+        Candidate = get_stafflane_model_class("recruitment", "candidate")
         onboarding_employees = Candidate.objects.filter(
             onboarding_stage__isnull=False, converted_employee_id__isnull=True
         )
@@ -1266,7 +1266,7 @@ if apps.is_installed("asset"):
         """
         This method is used to render the employee assets table page in the dashboard.
         """
-        AssetAssignment = get_horilla_model_class(
+        AssetAssignment = get_stafflane_model_class(
             app_label="asset", model="assetassignment"
         )
 
@@ -1294,7 +1294,7 @@ if apps.is_installed("pms"):
         This method is used to render the employee assets table page in the dashboard.
         """
 
-        Feedback = get_horilla_model_class(app_label="pms", model="feedback")
+        Feedback = get_stafflane_model_class(app_label="pms", model="feedback")
 
         offboarding_employees = OffboardingEmployee.objects.entire().values_list(
             "employee_id__id", "notice_period_starts"
@@ -1337,7 +1337,7 @@ def dashboard_join_chart(request):
         archived_employees.count(),
     ]
     if apps.is_installed("recruitment"):
-        Candidate = get_horilla_model_class(app_label="recruitment", model="candidate")
+        Candidate = get_stafflane_model_class(app_label="recruitment", model="candidate")
         onboarding_employees = Candidate.objects.filter(
             onboarding_stage__isnull=False, converted_employee_id__isnull=True
         )

@@ -22,22 +22,22 @@ from django.views.generic import View
 
 from base.forms import AddToUserGroupForm, ModelForm, forms
 from base.methods import paginator_qry
-from base.templatetags.horillafilters import app_installed
+from base.templatetags.stafflanefilters import app_installed
 from base.views import get_models_in_app
 from employee.methods.methods import get_model_class
 from employee.models import Employee, EmployeeBankDetails, EmployeeWorkInformation
 from employee.models import models as django_models
-from horilla.horilla_middlewares import _thread_locals
-from horilla.http import HorillaRedirect
-from horilla_views.cbv_methods import (
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.http import StafflaneRedirect
+from stafflane_views.cbv_methods import (
     hx_request_required,
     login_required,
     render_template,
 )
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
     TemplateView,
 )
 
@@ -67,7 +67,7 @@ logger = logging.getLogger(__name__)
 @method_decorator(
     all_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class AllocationView(HorillaDetailedView):
+class AllocationView(StafflaneDetailedView):
     """
     AllocationView
     """
@@ -116,7 +116,7 @@ class AllocationView(HorillaDetailedView):
                 messages.info(
                     request, _("Allocation feature not possible to this candidate")
                 )
-                return HorillaFormView.HttpResponse()
+                return StafflaneFormView.HttpResponse()
         else:
             instance = Employee.objects.get(pk=pk)
 
@@ -274,7 +274,7 @@ class BankInfo(ModelForm):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class PersonalFormView(HorillaFormView):
+class PersonalFormView(StafflaneFormView):
     """
     PersonalFormView
     """
@@ -323,7 +323,7 @@ class PersonalFormView(HorillaFormView):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class WorkFormView(HorillaFormView):
+class WorkFormView(StafflaneFormView):
     """
     WorkFormView
     """
@@ -392,7 +392,7 @@ def work_info_post_save(sender, instance, created, **kwargs):
 @method_decorator(
     all_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
 )
-class BankFormView(HorillaFormView):
+class BankFormView(StafflaneFormView):
     """
     WorkFormView
     """
@@ -636,7 +636,7 @@ if app_installed("asset"):
     @method_decorator(
         all_manager_can_enter(perm="recruitment.view_recruitment"), name="dispatch"
     )
-    class AssetAllocationList(HorillaListView):
+    class AssetAllocationList(StafflaneListView):
         """
         AssetAllocationLists
         """
@@ -849,7 +849,7 @@ class GroupAssignView(TemplateView):
         employee_id = request.GET.get("employee")
         employee = Employee.objects.filter(id=employee_id).first()
         if not employee:
-            return HorillaRedirect(request, message=_("Employee not found"))
+            return StafflaneRedirect(request, message=_("Employee not found"))
         groups = employee.employee_user_id.groups.all()
         form = AddToUserGroupForm(
             initial={
@@ -1171,12 +1171,12 @@ class Summary(TemplateView):
         instance_id = request.GET.get("instance_id")
 
         if not instance_id:
-            return HorillaRedirect(request, message=_("Employee ID missing."))
+            return StafflaneRedirect(request, message=_("Employee ID missing."))
 
         try:
             Employee.objects.get(pk=instance_id)
         except Employee.DoesNotExist:
-            return HorillaRedirect(
+            return StafflaneRedirect(
                 request, message=_("No Employee found matching the query.")
             )
 

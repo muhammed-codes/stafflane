@@ -24,12 +24,12 @@ from biometric.views import (
     str_time_seconds,
     zk_biometric_attendance_scheduler,
 )
-from horilla.http.response import HorillaRedirect
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaCardView,
-    HorillaFormView,
-    HorillaNavView,
+from stafflane.http.response import StafflaneRedirect
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneCardView,
+    StafflaneFormView,
+    StafflaneNavView,
 )
 
 
@@ -37,7 +37,7 @@ from horilla_views.generic.cbv.views import (
 @method_decorator(
     permission_required(perm="biometric.view_biometricdevices"), name="dispatch"
 )
-class BiometricNavBar(HorillaNavView):
+class BiometricNavBar(StafflaneNavView):
     """
     nav bar of the page
     """
@@ -64,7 +64,7 @@ class BiometricNavBar(HorillaNavView):
 @method_decorator(
     permission_required(perm="biometric.view_biometricdevices"), name="dispatch"
 )
-class BiometricCardView(HorillaCardView):
+class BiometricCardView(StafflaneCardView):
     """
     card view of the page
     """
@@ -187,7 +187,7 @@ class BiometricCardView(HorillaCardView):
 @method_decorator(
     permission_required(perm="biometric.add_biometricdevices"), name="dispatch"
 )
-class BiometricFormView(HorillaFormView):
+class BiometricFormView(StafflaneFormView):
     """
     from view for create and update biometric devices
     """
@@ -222,7 +222,7 @@ class BiometricFormView(HorillaFormView):
 @method_decorator(
     permission_required(perm="biometric.change_biometricdevices"), name="dispatch"
 )
-class BiometricSheduleForm(HorillaFormView):
+class BiometricSheduleForm(StafflaneFormView):
     """
     form view for shedule biometric device
     """
@@ -274,7 +274,7 @@ class BiometricSheduleForm(HorillaFormView):
                             seconds=str_time_seconds(device.scheduler_duration),
                         )
                         scheduler.start()
-                        return HorillaRedirect(self.request)
+                        return StafflaneRedirect(self.request)
                     except Exception as error:
                         logger.error(
                             "An error comes in biometric_device_schedule ", error
@@ -307,7 +307,7 @@ class BiometricSheduleForm(HorillaFormView):
                         seconds=str_time_seconds(device.scheduler_duration),
                     )
                     scheduler.start()
-                    return HorillaRedirect(self.request)
+                    return StafflaneRedirect(self.request)
                 else:
                     duration = self.request.POST.get("scheduler_duration")
                     device.is_scheduler = True
@@ -325,7 +325,7 @@ class BiometricSheduleForm(HorillaFormView):
                         seconds=str_time_seconds(device.scheduler_duration),
                     )
                     scheduler.start()
-                    return HorillaRedirect(self.request)
+                    return StafflaneRedirect(self.request)
             # else:
             #     message = _("Biometric device added successfully.")
             form.save()

@@ -18,18 +18,18 @@ from django.utils.translation import gettext_lazy as _
 from base.methods import choosesubordinates, is_reportingmanager
 from employee.filters import DocumentPipelineFilter, DocumentRequestFilter
 from employee.models import Employee
-from horilla.decorators import manager_can_enter
-from horilla.http.response import HorillaRedirect
-from horilla_documents.forms import DocumentForm
-from horilla_documents.forms import DocumentRejectCbvForm as RejectForm
-from horilla_documents.forms import DocumentRequestForm, DocumentUpdateForm
-from horilla_documents.models import Document, DocumentRequest
-from horilla_views.cbv_methods import hx_request_required, login_required
-from horilla_views.generic.cbv.pipeline import Pipeline
-from horilla_views.generic.cbv.views import (
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane.decorators import manager_can_enter
+from stafflane.http.response import StafflaneRedirect
+from stafflane_documents.forms import DocumentForm
+from stafflane_documents.forms import DocumentRejectCbvForm as RejectForm
+from stafflane_documents.forms import DocumentRequestForm, DocumentUpdateForm
+from stafflane_documents.models import Document, DocumentRequest
+from stafflane_views.cbv_methods import hx_request_required, login_required
+from stafflane_views.generic.cbv.pipeline import Pipeline
+from stafflane_views.generic.cbv.views import (
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
 )
 from notifications.signals import notify
 
@@ -78,9 +78,9 @@ def htmx_refresh_document_request_container(request) -> Optional[HttpResponse]:
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(
-    manager_can_enter("horilla_documents.add_documentrequests"), name="dispatch"
+    manager_can_enter("stafflane_documents.add_documentrequests"), name="dispatch"
 )
-class DocumentRequestCreateForm(HorillaFormView):
+class DocumentRequestCreateForm(StafflaneFormView):
     """
     form view for create and update document request
     """
@@ -92,7 +92,7 @@ class DocumentRequestCreateForm(HorillaFormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.form = choosesubordinates(
-            self.request, self.form, "horilla_documents.add_documentrequest"
+            self.request, self.form, "stafflane_documents.add_documentrequest"
         )
         if self.form.instance.pk:
             self.form_class.verbose_name = _("Update Document Request")
@@ -133,13 +133,13 @@ class DocumentRequestCreateForm(HorillaFormView):
             refreshed = htmx_refresh_document_request_container(self.request)
             if refreshed is not None:
                 return refreshed
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
 
         return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
-class DocumentCreateForm(HorillaFormView):
+class DocumentCreateForm(StafflaneFormView):
     """
     form view for upload document
     """
@@ -166,19 +166,19 @@ class DocumentCreateForm(HorillaFormView):
                 refreshed = htmx_refresh_document_request_container(self.request)
                 if refreshed is not None:
                     return refreshed
-                return HorillaRedirect(self.request)
+                return StafflaneRedirect(self.request)
 
         form.save()
         messages.success(self.request, _("Document Uploaded Successfully"))
         refreshed = htmx_refresh_document_request_container(self.request)
         if refreshed is not None:
             return refreshed
-        return HorillaRedirect(self.request)
+        return StafflaneRedirect(self.request)
 
 
 @method_decorator(login_required, name="dispatch")
-@method_decorator(manager_can_enter("horilla_documents.add_document"), name="dispatch")
-class DocumentRejectCbvForm(HorillaFormView):
+@method_decorator(manager_can_enter("stafflane_documents.add_document"), name="dispatch")
+class DocumentRejectCbvForm(StafflaneFormView):
     """
     form view for rejecting document on document request and employee individual view
     """
@@ -204,13 +204,13 @@ class DocumentRejectCbvForm(HorillaFormView):
             refreshed = htmx_refresh_document_request_container(self.request)
             if refreshed is not None:
                 return refreshed
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
 
         return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
-class DocumentUploadForm(HorillaFormView):
+class DocumentUploadForm(StafflaneFormView):
     """
     form view for upload documents on document request and employee individual view
     """
@@ -244,7 +244,7 @@ class DocumentUploadForm(HorillaFormView):
                 refreshed = htmx_refresh_document_request_container(self.request)
                 if refreshed is not None:
                     return refreshed
-                return HorillaRedirect(self.request)
+                return StafflaneRedirect(self.request)
 
         if form.is_valid():
             if form.instance.pk:
@@ -271,13 +271,13 @@ class DocumentUploadForm(HorillaFormView):
             refreshed = htmx_refresh_document_request_container(self.request)
             if refreshed is not None:
                 return refreshed
-            return HorillaRedirect(self.request)
+            return StafflaneRedirect(self.request)
 
         return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
-class DocumentRequestNav(HorillaNavView):
+class DocumentRequestNav(StafflaneNavView):
     """
     For nav bar
     """
@@ -296,7 +296,7 @@ class DocumentRequestNav(HorillaNavView):
             "employee.change_employee"
         ) or is_reportingmanager(self.request):
             if self.request.user.has_perm(
-                "horilla_documents.change_documentrequest"
+                "stafflane_documents.change_documentrequest"
             ) or is_reportingmanager(self.request):
                 self.actions = [
                     {
@@ -381,7 +381,7 @@ class DocumentRequestPipelineView(Pipeline):
 
 
 @method_decorator(login_required, name="dispatch")
-class DocumentListView(HorillaListView):
+class DocumentListView(StafflaneListView):
     """
     List view for document request
     """

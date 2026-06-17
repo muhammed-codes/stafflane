@@ -1,7 +1,7 @@
 from employee.models import Employee
-from horilla.horilla_middlewares import _thread_locals
-from horilla.methods import handle_no_permission
-from horilla_views.cbv_methods import decorator_with_arguments
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.methods import handle_no_permission
+from stafflane_views.cbv_methods import decorator_with_arguments
 from onboarding.models import OnboardingStage, OnboardingTask
 from recruitment.models import Recruitment
 

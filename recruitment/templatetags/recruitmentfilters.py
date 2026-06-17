@@ -12,7 +12,7 @@ from django import template
 from django.apps import apps
 from django.template.defaultfilters import register
 
-from horilla_auth.models import HorillaUser
+from stafflane_auth.models import StafflaneUser
 from recruitment.models import CandidateRating
 
 # from django.forms.boundfield
@@ -97,7 +97,7 @@ def employee(uid):
     Returns:
         user object
     """
-    return HorillaUser.objects.get(id=uid).employee_get if uid is not None else None
+    return StafflaneUser.objects.get(id=uid).employee_get if uid is not None else None
 
 
 @register.filter(name="media_path")

@@ -10,7 +10,7 @@ from django_filters import filters
 from base.filters import FilterSet
 from base.models import Company
 from employee.models import Employee
-from horilla.filters import HorillaFilterSet
+from stafflane.filters import StafflaneFilterSet
 from onboarding.models import (
     CandidateStage,
     CandidateTask,
@@ -22,7 +22,7 @@ from recruitment.filters import RecruitmentFilter as rec_filter
 from recruitment.models import Candidate, Recruitment
 
 
-class CandidateTaskFilter(HorillaFilterSet):
+class CandidateTaskFilter(StafflaneFilterSet):
     """
     Task filter class
     """
@@ -296,7 +296,7 @@ class CandidateFilter(FilterSet):
         fields = {}
 
 
-class OnboardingStageFilter(HorillaFilterSet):
+class OnboardingStageFilter(StafflaneFilterSet):
     """
     OnboardingStageFilter
     """

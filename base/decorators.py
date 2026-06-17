@@ -5,9 +5,9 @@ decorator functions for base
 from django.contrib import messages
 
 from employee.models import EmployeeWorkInformation
-from horilla.horilla_middlewares import _thread_locals
-from horilla.http.response import HorillaRedirect
-from horilla.methods import handle_no_permission
+from stafflane.stafflane_middlewares import _thread_locals
+from stafflane.http.response import StafflaneRedirect
+from stafflane.methods import handle_no_permission
 
 from .models import MultipleApprovalManagers, ShiftRequest, WorkTypeRequest
 
@@ -38,7 +38,7 @@ def shift_request_change_permission(function=None, *args, **kwargs):
         ):
             return function(request, *args, shift_request_id=shift_request_id, **kwargs)
         messages.info(request, "You dont have permission.")
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)
         # return function(request, *args, **kwargs)
 
     return check_permission
@@ -66,7 +66,7 @@ def work_type_request_change_permission(function=None, *args, **kwargs):
                 request, *args, work_type_request_id=work_type_request_id, **kwargs
             )
         messages.info(request, "You dont have permission.")
-        return HorillaRedirect(request)
+        return StafflaneRedirect(request)
         # return function(request, *args, **kwargs)
 
     return check_permission

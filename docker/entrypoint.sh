@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Starting Horilla HR..."
+echo "Starting Stafflane HR..."
 
 # Wait for PostgreSQL to be ready (with timeout)
 echo "Waiting for PostgreSQL..."

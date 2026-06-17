@@ -10,14 +10,14 @@ from django.utils.translation import gettext_lazy as _
 
 from base.filters import WorkTypeFilter
 from base.models import WorkType
-from horilla.decorators import permission_required
-from horilla_views.cbv_methods import login_required
-from horilla_views.generic.cbv.views import HorillaListView, HorillaNavView
+from stafflane.decorators import permission_required
+from stafflane_views.cbv_methods import login_required
+from stafflane_views.generic.cbv.views import StafflaneListView, StafflaneNavView
 
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("base.view_worktype"), name="dispatch")
-class WorkTypeList(HorillaListView):
+class WorkTypeList(StafflaneListView):
     """
     list view of work types in settings
     """
@@ -73,7 +73,7 @@ class WorkTypeList(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required("base.view_worktype"), name="dispatch")
-class WorkTypeNav(HorillaNavView):
+class WorkTypeNav(StafflaneNavView):
     """
     navbar of worktype
     """

@@ -65,9 +65,9 @@ from base.methods import (
 from base.models import Company, EmployeeShift
 from employee.filters import EmployeeFilter
 from employee.models import Employee
-from horilla import horilla_middlewares
-from horilla_widgets.widgets.horilla_multi_select_field import HorillaMultiSelectField
-from horilla_widgets.widgets.select_widgets import HorillaMultiSelectWidget
+from stafflane import stafflane_middlewares
+from stafflane_widgets.widgets.stafflane_multi_select_field import StafflaneMultiSelectField
+from stafflane_widgets.widgets.select_widgets import StafflaneMultiSelectWidget
 
 logger = logging.getLogger(__name__)
 
@@ -208,9 +208,9 @@ class AttendanceForm(BaseModelForm):
     """
 
     container_id = "attendanceFormFields"
-    employee_id = HorillaMultiSelectField(
+    employee_id = StafflaneMultiSelectField(
         queryset=Employee.objects.filter(employee_work_info__isnull=False),
-        widget=HorillaMultiSelectWidget(
+        widget=StafflaneMultiSelectWidget(
             filter_route_name="employee-widget-filter",
             filter_class=EmployeeFilter,
             filter_instance_context_name="f",
@@ -572,7 +572,7 @@ class AttendanceValidationConditionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        active_company_id = horilla_middlewares.get_selected_company()
+        active_company_id = stafflane_middlewares.get_selected_company()
         if active_company_id and not active_company_id == "all":
             self.fields["company_id"].queryset = Company.objects.filter(
                 id=active_company_id
@@ -861,7 +861,7 @@ excluded_fields = [
     "request_type",
     "month_sequence",
     "objects",
-    "horilla_history",
+    "stafflane_history",
 ]
 
 
@@ -1192,7 +1192,7 @@ class BulkAttendanceRequestForm(BaseModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(stafflane_middlewares._thread_locals, "request", None)
         employee = request.user.employee_get
         super().__init__(*args, **kwargs)
         if employee and hasattr(employee, "employee_work_info"):
@@ -1262,7 +1262,7 @@ class BulkAttendanceRequestForm(BaseModelForm):
         from_date = cleaned_data.get("from_date")
         to_date = cleaned_data.get("to_date")
         shift_id = cleaned_data.get("shift_id")
-        from horilla.horilla_middlewares import _thread_locals
+        from stafflane.stafflane_middlewares import _thread_locals
 
         request = _thread_locals.request
         attendance_clock_in = cleaned_data.get("attendance_clock_in")

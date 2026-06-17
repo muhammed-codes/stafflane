@@ -17,12 +17,12 @@ from base.methods import filtersubordinates
 from employee.filters import DisciplinaryActionFilter
 from employee.forms import ActiontypeForm, DisciplinaryActionForm
 from employee.models import Actiontype, DisciplinaryAction
-from horilla_views.cbv_methods import login_required, permission_required
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaFormView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.cbv_methods import login_required, permission_required
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneFormView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from notifications.signals import notify
@@ -38,7 +38,7 @@ class DisciplinaryActionsView(TemplateView):
 
 
 @method_decorator(login_required, name="dispatch")
-class DisciplinaryActionsList(HorillaListView):
+class DisciplinaryActionsList(StafflaneListView):
     """
     List view of disciplinary actions
     """
@@ -98,7 +98,7 @@ class DisciplinaryActionsList(HorillaListView):
 
 
 @method_decorator(login_required, name="dispatch")
-class DisciplinaryActionsNav(HorillaNavView):
+class DisciplinaryActionsNav(StafflaneNavView):
     """
     For nav bar
     """
@@ -122,7 +122,7 @@ class DisciplinaryActionsNav(HorillaNavView):
     search_swap_target = "#listContainer"
 
 
-class DynamicActionTypeFormView(HorillaFormView):
+class DynamicActionTypeFormView(StafflaneFormView):
 
     model = Actiontype
     form_class = ActiontypeForm
@@ -143,7 +143,7 @@ class DynamicActionTypeFormView(HorillaFormView):
 @method_decorator(
     permission_required("employee.add_disciplinaryaction"), name="dispatch"
 )
-class DisciplinaryActionsFormView(HorillaFormView):
+class DisciplinaryActionsFormView(StafflaneFormView):
     """
     Form View
     """
@@ -205,7 +205,7 @@ class DisciplinaryActionsFormView(HorillaFormView):
 @method_decorator(
     permission_required("employee.add_disciplinaryaction"), name="dispatch"
 )
-class DisciplinaryActionsFormDuplicate(HorillaFormView):
+class DisciplinaryActionsFormDuplicate(StafflaneFormView):
     """
     Duplicate form view
     """
@@ -249,7 +249,7 @@ class DisciplinaryActionsFormDuplicate(HorillaFormView):
 
 
 @method_decorator(login_required, name="dispatch")
-class DisciplinaryActionsDetailView(HorillaDetailedView):
+class DisciplinaryActionsDetailView(StafflaneDetailedView):
     """
     detail view of page
     """

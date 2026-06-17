@@ -12,13 +12,13 @@ from django.urls import reverse
 from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.stafflane_company_manager import StafflaneCompanyManager
 from base.models import Company
-from horilla.models import HorillaModel
+from stafflane.models import StafflaneModel
 from payroll.models.models import FilingStatus
 
 
-class PayrollSettings(HorillaModel):
+class PayrollSettings(StafflaneModel):
     """
     Payroll settings model
     """
@@ -34,7 +34,7 @@ class PayrollSettings(HorillaModel):
     )
 
     company_id = models.ForeignKey(Company, null=True, on_delete=models.PROTECT)
-    objects = HorillaCompanyManager("company_id")
+    objects = StafflaneCompanyManager("company_id")
 
     class Meta:
         verbose_name = _("Payroll Settings")
@@ -44,7 +44,7 @@ class PayrollSettings(HorillaModel):
         return f"Payroll Settings {self.currency_symbol}"
 
 
-class TaxBracket(HorillaModel):
+class TaxBracket(StafflaneModel):
     """
     TaxBracket model
     """

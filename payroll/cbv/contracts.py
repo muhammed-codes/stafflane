@@ -8,15 +8,15 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
-from horilla_views.cbv_methods import (
+from stafflane_views.cbv_methods import (
     hx_request_required,
     login_required,
     permission_required,
 )
-from horilla_views.generic.cbv.views import (
-    HorillaDetailedView,
-    HorillaListView,
-    HorillaNavView,
+from stafflane_views.generic.cbv.views import (
+    StafflaneDetailedView,
+    StafflaneListView,
+    StafflaneNavView,
     TemplateView,
 )
 from payroll.filters import ContractFilter
@@ -36,7 +36,7 @@ class ContractsView(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="payroll.view_contract"), name="dispatch")
-class ContractsList(HorillaListView):
+class ContractsList(StafflaneListView):
     """
     List view
     """
@@ -144,7 +144,7 @@ class ContractsList(HorillaListView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="payroll.view_contract"), name="dispatch")
-class ContractsNav(HorillaNavView):
+class ContractsNav(StafflaneNavView):
     """
     Nav bar
     """
@@ -229,7 +229,7 @@ class ContractsExportView(TemplateView):
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(permission_required(perm="payroll.view_contract"), name="dispatch")
-class ContractsDetailView(HorillaDetailedView):
+class ContractsDetailView(StafflaneDetailedView):
     """
     Detail View
     """
